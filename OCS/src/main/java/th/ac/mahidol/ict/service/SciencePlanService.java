@@ -9,6 +9,8 @@ import java.util.List;
 public interface SciencePlanService {
 
     List<SciencePlan> getSciencePlans();
+
+    SciencePlan getSciencePlanById(int id);
     void createSciencePlan(SciencePlan sciencePlan);
 
     boolean deleteSciencePlanByID(int id);

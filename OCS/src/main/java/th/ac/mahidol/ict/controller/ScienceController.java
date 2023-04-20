@@ -24,6 +24,12 @@ public class ScienceController {
     }
 
     @CrossOrigin
+    @GetMapping("/{id}")
+    public ResponseEntity<SciencePlan> getSciencePlanById(@PathVariable int id) {
+        return new ResponseEntity<>(scienceService.getSciencePlanById(id), HttpStatus.OK);
+    }
+
+    @CrossOrigin
     @GetMapping("/telescopeLoc")
     public ResponseEntity<List<SciencePlan.TELESCOPELOC>> getAllTelescopeLocations() {
         return new ResponseEntity<>(scienceService.getTelescopeLocations(), HttpStatus.OK);

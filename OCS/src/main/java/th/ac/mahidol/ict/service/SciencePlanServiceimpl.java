@@ -26,6 +26,11 @@ public class SciencePlanServiceimpl implements SciencePlanService {
     }
 
     @Override
+    public SciencePlan getSciencePlanById(int id) {
+        return ocs.getSciencePlanByNo(id);
+    }
+
+    @Override
     public void createSciencePlan(SciencePlan sciencePlan) {
         if(this.reserveDateAndTime(sciencePlan.getStartDate(), sciencePlan.getEndDate())){
 

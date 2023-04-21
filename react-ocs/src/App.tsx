@@ -2,17 +2,35 @@ import React from 'react';
 import './App.css';
 import { Navbar } from './layouts/NavbarAndFooter/Navbar';
 import { SciencePlans } from './layouts/SciencePlansPage/SciencePlansPage';
-import { HomePage } from './layouts/HomePage/HomePage';
-import { Route, Switch } from 'react-router-dom';
+import { Homepage } from './layouts/Homepage/Homepage';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import { SciencePlanInfoPage } from './layouts/SciencePlanInfoPage/SciencePlanInfoPage';
+import { oktaConfig } from './lib/oktaConfig';
+import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
+import { Security, LoginCallback } from '@okta/okta-react';
+import SignInWidget from "./SignIn/Signin"
+
+const oktaAuth = new OktaAuth(oktaConfig);
 
 function App() {
+
+  const history = useHistory();
+
+  const customSignInHandler = () => {
+    history.push('/login');
+  };
+
+  const restoreToOriginalUri = async (_oktaAuth: any, originalUri: any) => {
+    history.replace(toRelativeUrl(originalUri || '/', window.location.origin))
+  };
+  
   return (
     <div>
+      <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreToOriginalUri} onAuthRequired={customSignInHandler}>
       <Navbar />
       <Switch>
         <Route path={"/"} exact>
-          <HomePage />
+          <Homepage />
         </Route>
 
         <Route path={"/sciencePlans"}>
@@ -22,8 +40,10 @@ function App() {
         <Route path={"/sciencePlan/:planNo"}>
           <SciencePlanInfoPage />
         </Route>
-      </Switch>
 
+        <Route path={"/login"} render={() => <SignInWidget config={LoginCallback}/>}/>
+      </Switch>
+      </Security>
     </div>
   );
 }

@@ -1,7 +1,5 @@
-export const HomePage = () => {
+export const Homepage = () => {
     return(
-        <div className="homepage">
-
-        </div>
+        <div>Welcome to OCS</div>
     );
 }

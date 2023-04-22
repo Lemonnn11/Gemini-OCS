@@ -19,50 +19,50 @@ public class ScienceController {
 
     @CrossOrigin
     @GetMapping("/")
-    public ResponseEntity<List<SciencePlan>> gettAllSciencePlans() {
+    public ResponseEntity<List<SciencePlan>> gettAllSciencePlans(@RequestHeader(value = "Authorization") String token) {
         return new ResponseEntity<>(scienceService.getSciencePlans(), HttpStatus.OK);
     }
 
     @CrossOrigin
     @GetMapping("/{id}")
-    public ResponseEntity<SciencePlan> getSciencePlanById(@PathVariable int id) {
+    public ResponseEntity<SciencePlan> getSciencePlanById(@RequestHeader(value = "Authorization") String token, @PathVariable int id) {
         return new ResponseEntity<>(scienceService.getSciencePlanById(id), HttpStatus.OK);
     }
 
     @CrossOrigin
     @GetMapping("/telescopeLoc")
-    public ResponseEntity<List<SciencePlan.TELESCOPELOC>> getAllTelescopeLocations() {
+    public ResponseEntity<List<SciencePlan.TELESCOPELOC>> getAllTelescopeLocations(@RequestHeader(value = "Authorization") String token) {
         return new ResponseEntity<>(scienceService.getTelescopeLocations(), HttpStatus.OK);
     }
 
     @CrossOrigin
     @GetMapping("/starSystem")
-    public ResponseEntity<List<StarSystem.CONSTELLATIONS>> getAllStarSystems() {
+    public ResponseEntity<List<StarSystem.CONSTELLATIONS>> getAllStarSystems(@RequestHeader(value = "Authorization") String token) {
         return new ResponseEntity<>(scienceService.getStarSystems(), HttpStatus.OK);
     }
 
     @CrossOrigin
     @GetMapping("/search")
-    public ResponseEntity<List<SciencePlan>> getSciencePlanByQuery(@RequestParam("query") String query) {
+    public ResponseEntity<List<SciencePlan>> getSciencePlanByQuery(@RequestHeader(value = "Authorization") String token, @RequestParam("query") String query) {
         return new ResponseEntity<>(scienceService.searchSciencePlans(query), HttpStatus.OK);
     }
 
     @CrossOrigin
     @GetMapping("/category")
-    public ResponseEntity<List<SciencePlan>> getSciencePlanByStatus(@RequestParam("status") SciencePlan.STATUS status) {
+    public ResponseEntity<List<SciencePlan>> getSciencePlanByStatus(@RequestHeader(value = "Authorization") String token, @RequestParam("status") SciencePlan.STATUS status) {
         return new ResponseEntity<>(scienceService.findSciencePlansByStatus(status), HttpStatus.OK);
     }
 
     @CrossOrigin
     @PostMapping("/add")
-    public ResponseEntity<HttpStatus> createSciencePlan(@RequestBody SciencePlan sciencePlan){
+    public ResponseEntity<HttpStatus> createSciencePlan(@RequestHeader(value = "Authorization") String token, @RequestBody SciencePlan sciencePlan){
         scienceService.createSciencePlan(sciencePlan);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @CrossOrigin
     @PutMapping("/edit")
-    public ResponseEntity<HttpStatus> editSciencePlan(@RequestBody SciencePlan sciencePlan){
+    public ResponseEntity<HttpStatus> editSciencePlan(@RequestHeader(value = "Authorization") String token, @RequestBody SciencePlan sciencePlan){
         boolean res = scienceService.editSciencePlanByID(sciencePlan.getPlanNo(), sciencePlan);
         if(res){
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -72,7 +72,7 @@ public class ScienceController {
 
     @CrossOrigin
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatus> deleteSciencePlanById(@RequestParam("id") int id){
+    public ResponseEntity<HttpStatus> deleteSciencePlanById(@RequestHeader(value = "Authorization") String token, @RequestParam("id") int id){
         boolean res = scienceService.deleteSciencePlanByID(id);
         if(res){
             return new ResponseEntity<>(HttpStatus.OK);

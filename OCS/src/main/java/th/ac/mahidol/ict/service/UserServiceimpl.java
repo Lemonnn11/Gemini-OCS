@@ -15,7 +15,7 @@ import java.util.List;
 public class UserServiceimpl implements UserService{
 
     @Autowired
-    private MyOCSRepository ocs;
+    private MyOCSRepository ocs = new MyOCSRepository(true);
 
     @Override
     public List<User> getUsers() {

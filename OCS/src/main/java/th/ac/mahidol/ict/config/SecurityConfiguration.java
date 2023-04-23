@@ -16,7 +16,9 @@ public class SecurityConfiguration {
         http.csrf().disable();
 
         http.authorizeRequests(configurer ->
-                configurer.requestMatchers("/sciencePlans/**")
+                configurer.requestMatchers(
+                        "/sciencePlans/**",
+                                "/user/**")
                         .authenticated())
                 .oauth2ResourceServer()
                 .jwt();

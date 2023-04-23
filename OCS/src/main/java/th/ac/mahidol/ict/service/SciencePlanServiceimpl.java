@@ -5,6 +5,7 @@ import edu.gemini.app.ocs.model.StarSystem;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import th.ac.mahidol.ict.model.MySciencePlan;
 import th.ac.mahidol.ict.repository.MyOCSRepository;
 
 import java.text.ParseException;
@@ -21,21 +22,23 @@ public class SciencePlanServiceimpl implements SciencePlanService {
     private MyOCSRepository ocs;
 
     @Override
-    public List<SciencePlan> getSciencePlans() {
-        return ocs.getAllSciencePlans();
+    public List<MySciencePlan> getSciencePlans() {
+        return ocs.getAllMySciencePlans();
     }
 
     @Override
-    public SciencePlan getSciencePlanById(int id) {
+    public MySciencePlan getSciencePlanById(int id) {
         return ocs.getSciencePlanByNo(id);
     }
 
     @Override
-    public void createSciencePlan(SciencePlan sciencePlan) {
-        if(this.reserveDateAndTime(sciencePlan.getStartDate(), sciencePlan.getEndDate())){
-
+    public boolean createSciencePlan(MySciencePlan mySciencePlan) {
+        System.out.println(mySciencePlan.getStartDate() + " " + mySciencePlan.getEndDate());
+        if(this.reserveDateAndTime(mySciencePlan.getStartDate(), mySciencePlan.getEndDate())){
+            ocs.createSciencePlan(mySciencePlan);
+            return true;
         }
-        ocs.createSciencePlan(sciencePlan);
+        return false;
     }
 
     @Override
@@ -44,30 +47,33 @@ public class SciencePlanServiceimpl implements SciencePlanService {
     }
 
     @Override
-    public boolean editSciencePlanByID(int id, SciencePlan sciencePlan) {
-        return ocs.editSciencePlan(id, sciencePlan);
+    public boolean editSciencePlanByID(int id, MySciencePlan mySciencePlan) {
+        return ocs.editSciencePlan(id, mySciencePlan);
     }
 
     @Override
-    public List<SciencePlan> searchSciencePlans(String query){
-        List<SciencePlan> querySciencePlans = new ArrayList<>();
-        for (SciencePlan sciencePlan:
-                ocs.getAllSciencePlans()) {
-            if(query.equals(String.valueOf(sciencePlan.getPlanNo())) || query.equals(sciencePlan.getCreator())
-                    || query.equals(String.valueOf(sciencePlan.getStarSystem())) || query.equals(sciencePlan.getStartDate()) || query.equals(sciencePlan.getEndDate())){
-                querySciencePlans.add(sciencePlan);
+    public List<MySciencePlan> searchSciencePlans(String query){
+        query = query.toLowerCase();
+        List<MySciencePlan> querySciencePlans = new ArrayList<>();
+        for (MySciencePlan mySciencePlan:
+                ocs.getAllMySciencePlans()) {
+            if(String.valueOf(mySciencePlan.getPlanNo()).contains(query) || mySciencePlan.getCreator().toLowerCase().contains(query)
+                    || String.valueOf(mySciencePlan.getStarSystem()).toLowerCase().contains(query) || mySciencePlan.getStartDate().contains(query)
+                    || mySciencePlan.getEndDate().contains(query)){
+                querySciencePlans.add(mySciencePlan);
             }
+
         }
         return querySciencePlans;
     }
 
     @Override
-    public List<SciencePlan> findSciencePlansByStatus(SciencePlan.STATUS status){
-        List<SciencePlan> querySciencePlans = new ArrayList<>();
-        for (SciencePlan sciencePlan:
-                ocs.getAllSciencePlans()) {
-            if(sciencePlan.getStatus().equals(status)){
-                querySciencePlans.add(sciencePlan);
+    public List<MySciencePlan> findSciencePlansByStatus(SciencePlan.STATUS status){
+        List<MySciencePlan> querySciencePlans = new ArrayList<>();
+        for (MySciencePlan mySciencePlan:
+                ocs.getAllMySciencePlans()) {
+            if(mySciencePlan.getStatus().equals(status)){
+                querySciencePlans.add(mySciencePlan);
             }
         }
         return querySciencePlans;
@@ -78,24 +84,26 @@ public class SciencePlanServiceimpl implements SciencePlanService {
         Date startDate1;
         Date endDate1;
         try {
-            startDate1 = (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")).parse(startDate);
-            endDate1 = (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")).parse(endDate);
+            startDate1 = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(startDate);
+            endDate1 = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(endDate);
         } catch (ParseException var3) {
             var3.printStackTrace();
             return false;
         }
-        for (SciencePlan sciencePlan:
-                ocs.getAllSciencePlans()) {
+        for (MySciencePlan mySciencePlan:
+                ocs.getAllMySciencePlans()) {
             Date startDate2;
             Date endDate2;
             try {
-                startDate2 = (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")).parse(sciencePlan.getStartDate());
-                endDate2 = (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")).parse(sciencePlan.getStartDate());
+                startDate2 = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(mySciencePlan.getStartDate());
+                endDate2 = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(mySciencePlan.getEndDate());
             } catch (ParseException var3) {
                 var3.printStackTrace();
                 return false;
             }
-            if(startDate1.after(startDate2) && startDate1.before(startDate2) || endDate1.after(endDate2) && endDate1.before(endDate2)){
+            if ((startDate1.after(startDate2) && startDate1.before(endDate2) ||
+                    endDate1.after(startDate2) && endDate1.before(endDate2)) ||
+                    startDate1.equals(startDate2) || endDate1.equals(endDate2)) {
                 return false;
             }
         }

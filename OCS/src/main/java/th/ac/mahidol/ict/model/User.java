@@ -9,8 +9,6 @@ public class User {
     private String fname;
     private String lname;
     private String email;
-    private String username;
-    private String password;
     private String accessLevel;
 
     public User(){
@@ -22,8 +20,6 @@ public class User {
         this.fname = fname;
         this.lname = lname;
         this.email = email;
-        this.username = username;
-        this.password = password;
         this.accessLevel = accessLevel;
     }
 
@@ -37,14 +33,6 @@ public class User {
 
     public String getLname() {
         return lname;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getAccessLevel() {
@@ -69,14 +57,6 @@ public class User {
 
     public void setLname(String lname) {
         this.lname = lname;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public void setAccessLevel(String accessLevel) {

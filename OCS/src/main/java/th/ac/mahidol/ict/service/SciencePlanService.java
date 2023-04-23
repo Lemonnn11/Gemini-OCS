@@ -2,24 +2,25 @@ package th.ac.mahidol.ict.service;
 
 import edu.gemini.app.ocs.model.SciencePlan;
 import edu.gemini.app.ocs.model.StarSystem;
+import th.ac.mahidol.ict.model.MySciencePlan;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface SciencePlanService {
 
-    List<SciencePlan> getSciencePlans();
+    List<MySciencePlan> getSciencePlans();
 
-    SciencePlan getSciencePlanById(int id);
-    void createSciencePlan(SciencePlan sciencePlan);
+    MySciencePlan getSciencePlanById(int id);
+    boolean createSciencePlan(MySciencePlan mySciencePlan);
 
     boolean deleteSciencePlanByID(int id);
 
-    boolean editSciencePlanByID(int id, SciencePlan sciencePlan);
+    boolean editSciencePlanByID(int id, MySciencePlan mySciencePlan);
 
-    List<SciencePlan> searchSciencePlans(String query);
+    List<MySciencePlan> searchSciencePlans(String query);
 
-    List<SciencePlan> findSciencePlansByStatus(SciencePlan.STATUS status);
+    List<MySciencePlan> findSciencePlansByStatus(SciencePlan.STATUS status);
 
     boolean reserveDateAndTime(String startDate1, String endDate1);
 

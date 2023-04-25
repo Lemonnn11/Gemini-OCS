@@ -64,7 +64,7 @@ public class ScienceController {
 
     @CrossOrigin
     @PutMapping("/edit")
-    public ResponseEntity<HttpStatus> editSciencePlan(@RequestBody MySciencePlan mySciencePlan){
+    public ResponseEntity<HttpStatus> editSciencePlan( @RequestBody MySciencePlan mySciencePlan){
         boolean res = scienceService.editSciencePlanByID(mySciencePlan.getPlanNo(), mySciencePlan);
         if(res){
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -74,7 +74,7 @@ public class ScienceController {
 
     @CrossOrigin
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatus> deleteSciencePlanById(@RequestParam("id") int id){
+    public ResponseEntity<HttpStatus> deleteSciencePlanById( @RequestParam("id") int id){
         boolean res = scienceService.deleteSciencePlanByID(id);
         if(res){
             return new ResponseEntity<>(HttpStatus.OK);

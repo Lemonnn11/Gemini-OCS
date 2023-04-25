@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ExtractJWT {
 
-    public static String JWTPayloadExtract(String token){
+    public static String JWTPayloadExtract(String token, String target){
 
         token.replace("Bearer", "");
 
@@ -22,19 +22,21 @@ public class ExtractJWT {
 
         for (String key: all) {
             String[] keyValue = key.split(":");
-            if(keyValue[0].equals("\"sub\"")){
+            if(keyValue[0].equals(target)){
                 int rem = 1;
                 if(keyValue[1].endsWith("}")){
                     rem = 2;
                 }
-                keyValue[1] = keyValue[1].substring(0, keyValue.length - rem);
+                keyValue[1] = keyValue[1].substring(0, keyValue[1].length() - rem);
                 keyValue[1] = keyValue[1].substring(1);
 
                 map.put(keyValue[0], keyValue[1]);
             }
         }
-        if(map.containsKey("\"sub\"")){
-            return map.get("\"sub\"");
+        System.out.println(map);
+        System.out.println(map.get(target));
+        if(map.containsKey(target)){
+            return map.get(target);
         }
         return null;
     }

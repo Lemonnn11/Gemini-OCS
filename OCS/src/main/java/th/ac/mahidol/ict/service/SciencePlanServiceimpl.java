@@ -5,6 +5,7 @@ import edu.gemini.app.ocs.model.StarSystem;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import th.ac.mahidol.ict.model.Astronomer;
 import th.ac.mahidol.ict.model.MySciencePlan;
 import th.ac.mahidol.ict.repository.MyOCSRepository;
 
@@ -32,7 +33,17 @@ public class SciencePlanServiceimpl implements SciencePlanService {
     }
 
     @Override
-    public boolean createSciencePlan(MySciencePlan mySciencePlan) {
+    public boolean createSciencePlan(MySciencePlan mySciencePlan, String creatorEmail) {
+        String creator = null;
+        for (Astronomer astronomer:
+             ocs.getAllAstronomers()) {
+            System.out.println(astronomer.getEmail());
+            System.out.println(creatorEmail.equals(astronomer.getEmail()));
+            if(creatorEmail.equals(astronomer.getEmail())){
+                creator = astronomer.getFname() + ' ' + astronomer.getLname();
+            }
+        }
+        mySciencePlan.setCreator(creator);
         System.out.println(mySciencePlan.getStartDate() + " " + mySciencePlan.getEndDate());
         if(this.reserveDateAndTime(mySciencePlan.getStartDate(), mySciencePlan.getEndDate())){
             ocs.createSciencePlan(mySciencePlan);

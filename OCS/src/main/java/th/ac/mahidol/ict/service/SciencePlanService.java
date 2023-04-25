@@ -12,7 +12,7 @@ public interface SciencePlanService {
     List<MySciencePlan> getSciencePlans();
 
     MySciencePlan getSciencePlanById(int id);
-    boolean createSciencePlan(MySciencePlan mySciencePlan);
+    boolean createSciencePlan(MySciencePlan mySciencePlan, String creatorEmail);
 
     boolean deleteSciencePlanByID(int id);
 

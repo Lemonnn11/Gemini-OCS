@@ -18,10 +18,13 @@ public class SecurityConfiguration {
         http.authorizeRequests(configurer ->
                 configurer.requestMatchers(
                         "/sciencePlans/**",
-                                "/user/**")
+                                "/user/**",
+                                "/resources/**")
                         .authenticated())
                 .oauth2ResourceServer()
                 .jwt();
+
+
 
         http.cors();
 

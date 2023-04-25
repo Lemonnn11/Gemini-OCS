@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import th.ac.mahidol.ict.model.MySciencePlan;
 import th.ac.mahidol.ict.service.SciencePlanService;
+import th.ac.mahidol.ict.utils.ExtractJWT;
 
 import java.util.List;
 
@@ -20,44 +21,42 @@ public class ScienceController {
 
     @CrossOrigin
     @GetMapping("/")
-    public ResponseEntity<List<MySciencePlan>> gettAllSciencePlans(@RequestHeader(value = "Authorization") String token) {
+    public ResponseEntity<List<MySciencePlan>> gettAllSciencePlans() {
         return new ResponseEntity<>(scienceService.getSciencePlans(), HttpStatus.OK);
     }
 
     @CrossOrigin
     @GetMapping("/{id}")
-    public ResponseEntity<MySciencePlan> getSciencePlanById(@RequestHeader(value = "Authorization") String token, @PathVariable int id) {
+    public ResponseEntity<MySciencePlan> getSciencePlanById(@PathVariable int id) {
         return new ResponseEntity<>(scienceService.getSciencePlanById(id), HttpStatus.OK);
     }
 
     @CrossOrigin
     @GetMapping("/telescopeLoc")
-    public ResponseEntity<List<SciencePlan.TELESCOPELOC>> getAllTelescopeLocations(@RequestHeader(value = "Authorization") String token) {
+    public ResponseEntity<List<SciencePlan.TELESCOPELOC>> getAllTelescopeLocations() {
         return new ResponseEntity<>(scienceService.getTelescopeLocations(), HttpStatus.OK);
     }
 
-    @CrossOrigin
-    @GetMapping("/starSystem")
-    public ResponseEntity<List<StarSystem.CONSTELLATIONS>> getAllStarSystems(@RequestHeader(value = "Authorization") String token) {
-        return new ResponseEntity<>(scienceService.getStarSystems(), HttpStatus.OK);
-    }
+
 
     @CrossOrigin
     @GetMapping("/search")
-    public ResponseEntity<List<MySciencePlan>> getSciencePlanByQuery(@RequestHeader(value = "Authorization") String token, @RequestParam("query") String query) {
+    public ResponseEntity<List<MySciencePlan>> getSciencePlanByQuery(@RequestParam("query") String query) {
         return new ResponseEntity<>(scienceService.searchSciencePlans(query), HttpStatus.OK);
     }
 
     @CrossOrigin
     @GetMapping("/category")
-    public ResponseEntity<List<MySciencePlan>> getSciencePlanByStatus(@RequestHeader(value = "Authorization") String token, @RequestParam("status") SciencePlan.STATUS status) {
+    public ResponseEntity<List<MySciencePlan>> getSciencePlanByStatus(@RequestParam("status") SciencePlan.STATUS status) {
         return new ResponseEntity<>(scienceService.findSciencePlansByStatus(status), HttpStatus.OK);
     }
 
     @CrossOrigin
     @PostMapping("/add")
     public ResponseEntity<HttpStatus> createSciencePlan(@RequestHeader(value = "Authorization") String token, @RequestBody MySciencePlan mySciencePlan) throws Exception{
-        if(scienceService.createSciencePlan(mySciencePlan)){
+        String email = ExtractJWT.JWTPayloadExtract(token, "\"sub\"");
+        boolean res = scienceService.createSciencePlan(mySciencePlan, email);
+        if(res){
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
@@ -65,7 +64,7 @@ public class ScienceController {
 
     @CrossOrigin
     @PutMapping("/edit")
-    public ResponseEntity<HttpStatus> editSciencePlan(@RequestHeader(value = "Authorization") String token, @RequestBody MySciencePlan mySciencePlan){
+    public ResponseEntity<HttpStatus> editSciencePlan(@RequestBody MySciencePlan mySciencePlan){
         boolean res = scienceService.editSciencePlanByID(mySciencePlan.getPlanNo(), mySciencePlan);
         if(res){
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -75,7 +74,7 @@ public class ScienceController {
 
     @CrossOrigin
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatus> deleteSciencePlanById(@RequestHeader(value = "Authorization") String token, @RequestParam("id") int id){
+    public ResponseEntity<HttpStatus> deleteSciencePlanById(@RequestParam("id") int id){
         boolean res = scienceService.deleteSciencePlanByID(id);
         if(res){
             return new ResponseEntity<>(HttpStatus.OK);

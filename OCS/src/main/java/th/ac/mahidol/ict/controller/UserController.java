@@ -26,12 +26,6 @@ public class UserController {
     }
 
     @CrossOrigin
-    @GetMapping("/allAstronomer")
-    public ResponseEntity<List<Astronomer>> getAllAstronomers(@RequestHeader(value = "Authorization") String token){
-        return new ResponseEntity<>(userService.getAstronomers(), HttpStatus.OK);
-    }
-
-    @CrossOrigin
     @GetMapping("/allScienceObserver")
     public ResponseEntity<List<ScienceObserver>> getAllSciencePlans(@RequestHeader(value = "Authorization") String token){
         return new ResponseEntity<>(userService.getScienceObservers(), HttpStatus.OK);

@@ -59,6 +59,7 @@ public class MyOCSRepository extends OCS {
                 astronomer.setId(user.getId());
                 astronomer.setFname(user.getFname());
                 astronomer.setLname(user.getLname());
+                astronomer.setEmail(user.getEmail());
                 this.astronomers.add(astronomer);
             }
         }
@@ -72,6 +73,7 @@ public class MyOCSRepository extends OCS {
                 scienceObserver.setId(user.getId());
                 scienceObserver.setFname(user.getFname());
                 scienceObserver.setLname(user.getLname());
+                scienceObserver.setEmail(user.getEmail());
                 this.scienceObservers.add(scienceObserver);
             }
         }
@@ -495,7 +497,7 @@ public class MyOCSRepository extends OCS {
             stmt.executeUpdate(sql);
             sql = " CREATE TABLE IF NOT EXISTS user  (userId INT not NULL,  fname VARCHAR(50),  lname VARCHAR(50), email VARCHAR(100), accessLevel VARCHAR(50), PRIMARY KEY ( userId ))";
             stmt.executeUpdate(sql);
-            sql = " INSERT INTO user VALUES ( 1,'John','Doe', 'john@gmail.com', 'Astronomer'), ( 2,'Jane','Dunn', 'jane@gmail.com', 'scienceObserver'), ( 3,'Elon','Musk', 'elon.musk@gmail.com', 'Astronomer');";
+            sql = " INSERT INTO user VALUES ( 1,'John','Doe', 'john.doe@email.com', 'Astronomer'), ( 2,'Jane','Dunn', 'jane.dunn@email.com', 'scienceObserver'), ( 3,'Elon','Musk', 'elon.musk@email.com', 'Astronomer');";
             stmt.executeUpdate(sql);
             stmt.close();
             conn.close();

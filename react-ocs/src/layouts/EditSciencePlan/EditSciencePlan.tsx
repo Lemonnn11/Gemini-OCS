@@ -256,8 +256,8 @@ export const EditSciencePlanPage = () => {
                 body: JSON.stringify(sciencePlann)
             };
 
-            const addNewSciencePlan = await fetch(url, request);
-            if (!addNewSciencePlan) {
+            const eSciencePlan = await fetch(url, request);
+            if (!eSciencePlan) {
                 throw new Error('Error found');
             } else {
                 setShowWarning(false);

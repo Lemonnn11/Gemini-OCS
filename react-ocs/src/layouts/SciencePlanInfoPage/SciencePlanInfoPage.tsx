@@ -21,6 +21,7 @@ export const SciencePlanInfoPage = () => {
 
     const [planNo, setPlanNo] = useState("");
     const [creator, setCreator] = useState("");
+    const [status, setStatus] = useState("");
     const [collab, setCollab] = useState('collaborator');
     const [objectives, setObjective] = useState('');
     const [starSystem, setStarSystem] = useState('Star System');
@@ -105,6 +106,29 @@ export const SciencePlanInfoPage = () => {
             );
 
             setSciencePlan(plan);
+
+            setPlanNo(plan.planNo.toString());
+            setCreator(plan.creator);
+            setStatus(plan.status);
+            setFunding(plan.fundingInUSD?.toString());
+            setObjective(plan.objectives);
+            setStarSystem(plan.starSystem);
+            setCollab(plan.collaborator.fname + " "+ plan.collaborator.lname);
+            setLocation(plan.telescopeLocation);
+            setFileType(plan.dataProcRequirement.fileType);
+            setFileQuality(plan.dataProcRequirement.fileQuality);
+            setColorType(plan.dataProcRequirement.colorType);
+            setContrast(plan.dataProcRequirement.contrast.toString());
+            setBrightness(plan.dataProcRequirement.brightness.toString());
+            setSaturation(plan.dataProcRequirement.saturation.toString());
+            setHighlights(plan.dataProcRequirement.highlights.toString());
+            setExposure(plan.dataProcRequirement.exposure.toString());
+            setShadows(plan.dataProcRequirement.shadows.toString());
+            setWhites(plan.dataProcRequirement.whites.toString());
+            setBlacks(plan.dataProcRequirement.blacks.toString());
+            setLuminance(plan.dataProcRequirement.luminance.toString());
+            setHue(plan.dataProcRequirement.hue.toString());
+
             setLoading(false);
             console.log(sciencePlan)
         };
@@ -130,16 +154,13 @@ export const SciencePlanInfoPage = () => {
 
     async function submitSciencePlan(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        const url = `http://localhost:8080/sciencePlans/add`;
-        if (authState?.isAuthenticated && collab !== 'collaborator' && fundingInUSD !== '' && starSystem !== 'Star System' && location !== 'location' && objectives !== ''
-            && fileType !== '' && fileQuality !== '' && colorType !== '' && contrast !== '' && brightness !== '' && saturation !== '' && highlights !== '' && exposure !== '' && shadows !== ''
-            && whites !== '' && blacks !== '' && luminance !== '' && hue !== '' && startDate !== '' && startTime !== '' && endDate !== '' && endTime !== '') {
+        const url = `http://localhost:8080/sciencePlans/submit`;
             const [firstName, lastName] = collab.split(" ");
             const collabora: AstronomerModel = new AstronomerModel(firstName, lastName);
             const DPR: DataProcRequirementModel = new DataProcRequirementModel(fileType, fileQuality, colorType, parseInt(contrast), parseInt(brightness), parseInt(saturation), parseInt(highlights),
                 parseInt(exposure), parseInt(shadows), parseInt(whites), parseInt(blacks), parseInt(luminance), parseInt(hue))
-            const sciencePlann: SciencePlanModel2 = new SciencePlanModel2(parseInt(fundingInUSD), objectives, starSystem, new Date(startDate + 'T' + startTime).toISOString(), new Date(endDate + 'T' + endTime).toISOString(), location,
-                DPR, collabora, "SAVED");
+            const sciencePlann: SciencePlanModel = new SciencePlanModel(parseInt(planNo), creator, "", parseInt(fundingInUSD), objectives, starSystem, new Date(startDate + 'T' + startTime).toISOString(), new Date(endDate + 'T' + endTime).toISOString(), location,
+                DPR, status, collabora);
             console.log(JSON.stringify(sciencePlann));
             const request = {
                 method: "POST",
@@ -157,34 +178,6 @@ export const SciencePlanInfoPage = () => {
                 setShowWarning(false);
                 setShowSuccess(true);
             }
-
-            setCollab('collaborator');
-            setFunding('');
-            setStarSystem('Star System');
-            setLocation('location');
-            setObjective('');
-            setFileType('');
-            setFileQuality('');
-            setColorType('');
-            setContrast('');
-            setBrightness('');
-            setSaturation('');
-            setHighlights('');
-            setExposure('');
-            setShadows('');
-            setWhites('');
-            setBlacks('');
-            setLuminance('');
-            setHue('');
-            setStartDate('');
-            setStartTime('');
-            setEndDate('');
-            setEndTime('');
-
-        } else {
-            setShowWarning(true);
-            setShowSuccess(false)
-        }
 
     }
 

@@ -20,7 +20,7 @@ import java.util.List;
 public class SciencePlanServiceimpl implements SciencePlanService {
 
     @Autowired
-    private MyOCSRepository ocs;
+    private MyOCSRepository ocs = new MyOCSRepository(true);
 
     @Override
     public List<MySciencePlan> getSciencePlans() {
@@ -30,6 +30,11 @@ public class SciencePlanServiceimpl implements SciencePlanService {
     @Override
     public MySciencePlan getSciencePlanById(int id) {
         return ocs.getSciencePlanByNo(id);
+    }
+
+    @Override
+    public String submitSciencePlan(MySciencePlan sp) {
+        return ocs.submitSciencePlan(sp);
     }
 
     @Override

@@ -18,6 +18,8 @@ public interface SciencePlanService {
 
     boolean editSciencePlanByID(int id, MySciencePlan mySciencePlan);
 
+    String submitSciencePlan(MySciencePlan sp);
+
     List<MySciencePlan> searchSciencePlans(String query);
 
     List<MySciencePlan> findSciencePlansByStatus(SciencePlan.STATUS status);

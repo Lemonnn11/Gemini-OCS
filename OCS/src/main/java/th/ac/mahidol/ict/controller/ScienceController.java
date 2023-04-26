@@ -73,6 +73,12 @@ public class ScienceController {
     }
 
     @CrossOrigin
+    @PutMapping("/submit")
+    public ResponseEntity<String> submitSciencePlan(@RequestBody MySciencePlan mySciencePlan){
+        return new ResponseEntity<>(scienceService.submitSciencePlan(mySciencePlan), HttpStatus.OK);
+    }
+
+    @CrossOrigin
     @DeleteMapping("/delete")
     public ResponseEntity<HttpStatus> deleteSciencePlanById( @RequestParam("id") int id){
         boolean res = scienceService.deleteSciencePlanByID(id);

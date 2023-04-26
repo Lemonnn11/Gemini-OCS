@@ -293,7 +293,7 @@ export const EditSciencePlanPage = () => {
                             </div>
                         </div>
                         <div className="card-body">
-                            <form>
+                            <form onSubmit={editSciencePlan}>
                                 <div className="row ml-2 mt-3">
                                     <div className="col mx-5">
                                         <div className="row">

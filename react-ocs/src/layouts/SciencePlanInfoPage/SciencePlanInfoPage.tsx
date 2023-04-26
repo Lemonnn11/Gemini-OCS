@@ -7,6 +7,8 @@ import AstronomerModel from "../../models/AstronomerModel";
 import { ScriptTarget } from "typescript";
 import { Navbar } from "../NavbarAndFooter/Navbar1";
 import { Link, useHistory } from "react-router-dom";
+import SciencePlanModel2 from "../../models/SciencePlanModel2";
+import AstronomerModel2 from "../../models/AstronomerModel2";
 
 export const SciencePlanInfoPage = () => {
 
@@ -14,6 +16,35 @@ export const SciencePlanInfoPage = () => {
     const [isLoading, setLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
     const { oktaAuth, authState } = useOktaAuth();
+    const [showWarning, setShowWarning] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+
+    const [planNo, setPlanNo] = useState("");
+    const [creator, setCreator] = useState("");
+    const [collab, setCollab] = useState('collaborator');
+    const [objectives, setObjective] = useState('');
+    const [starSystem, setStarSystem] = useState('Star System');
+    const [location, setLocation] = useState('location');
+    const [fundingInUSD, setFunding] = useState("");
+    const [fileType, setFileType] = useState("");
+    const [fileQuality, setFileQuality] = useState("");
+    const [colorType, setColorType] = useState("");
+    const [contrast, setContrast] = useState("");
+    const [brightness, setBrightness] = useState("");
+    const [saturation, setSaturation] = useState("");
+    const [highlights, setHighlights] = useState("");
+    const [exposure, setExposure] = useState("");
+    const [shadows, setShadows] = useState("");
+    const [whites, setWhites] = useState("");
+    const [blacks, setBlacks] = useState("");
+    const [luminance, setLuminance] = useState("");
+    const [hue, setHue] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
+    const [starSystems, setStarSystems] = useState<string[]>([]);
+    const [collaborators, setCollaborators] = useState<AstronomerModel2[]>([]);
 
     const history = useHistory();
 
@@ -95,6 +126,66 @@ export const SciencePlanInfoPage = () => {
                 <p>{httpError}</p>
             </div>
         )
+    }
+
+    async function submitSciencePlan(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        const url = `http://localhost:8080/sciencePlans/add`;
+        if (authState?.isAuthenticated && collab !== 'collaborator' && fundingInUSD !== '' && starSystem !== 'Star System' && location !== 'location' && objectives !== ''
+            && fileType !== '' && fileQuality !== '' && colorType !== '' && contrast !== '' && brightness !== '' && saturation !== '' && highlights !== '' && exposure !== '' && shadows !== ''
+            && whites !== '' && blacks !== '' && luminance !== '' && hue !== '' && startDate !== '' && startTime !== '' && endDate !== '' && endTime !== '') {
+            const [firstName, lastName] = collab.split(" ");
+            const collabora: AstronomerModel = new AstronomerModel(firstName, lastName);
+            const DPR: DataProcRequirementModel = new DataProcRequirementModel(fileType, fileQuality, colorType, parseInt(contrast), parseInt(brightness), parseInt(saturation), parseInt(highlights),
+                parseInt(exposure), parseInt(shadows), parseInt(whites), parseInt(blacks), parseInt(luminance), parseInt(hue))
+            const sciencePlann: SciencePlanModel2 = new SciencePlanModel2(parseInt(fundingInUSD), objectives, starSystem, new Date(startDate + 'T' + startTime).toISOString(), new Date(endDate + 'T' + endTime).toISOString(), location,
+                DPR, collabora, "SAVED");
+            console.log(JSON.stringify(sciencePlann));
+            const request = {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(sciencePlann)
+            };
+
+            const addNewSciencePlan = await fetch(url, request);
+            if (!addNewSciencePlan) {
+                throw new Error('Error found');
+            } else {
+                setShowWarning(false);
+                setShowSuccess(true);
+            }
+
+            setCollab('collaborator');
+            setFunding('');
+            setStarSystem('Star System');
+            setLocation('location');
+            setObjective('');
+            setFileType('');
+            setFileQuality('');
+            setColorType('');
+            setContrast('');
+            setBrightness('');
+            setSaturation('');
+            setHighlights('');
+            setExposure('');
+            setShadows('');
+            setWhites('');
+            setBlacks('');
+            setLuminance('');
+            setHue('');
+            setStartDate('');
+            setStartTime('');
+            setEndDate('');
+            setEndTime('');
+
+        } else {
+            setShowWarning(true);
+            setShowSuccess(false)
+        }
+
     }
 
     return (

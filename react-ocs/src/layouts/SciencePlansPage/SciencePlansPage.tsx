@@ -4,6 +4,11 @@ import { error } from "console";
 import { ReturnSciencePlan } from "./components/ReturnSciencePlan";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import DataProcRequirementModel from "../../models/DataProcRequirementModel";
+import { Navbar } from "../NavbarAndFooter/Navbar1";
+import { useOktaAuth } from '@okta/okta-react';
+import { Link } from "react-router-dom";
+import AstronomerModel from "../../models/AstronomerModel";
+
 export const SciencePlans = () =>{
 
     const [sciencePlans, setSciencePlan] = useState<SciencePlanModel[]>([]);
@@ -12,9 +17,11 @@ export const SciencePlans = () =>{
     const [query, setQuery] = useState('');
     const [queryUrl, setQueryUrl] = useState('');
     const [category, setCategory] = useState('Status');
+    const{ oktaAuth, authState } = useOktaAuth();
 
     useEffect(() => {
         const fetchSciencePlans = async () => {
+
             const baseUrl: string = "http://localhost:8080/sciencePlans/";
 
             let url: string = ''
@@ -25,7 +32,11 @@ export const SciencePlans = () =>{
                 url = baseUrl + queryUrl;
             }
 
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                headers: {
+                  "Authorization": `Bearer ${authState?.accessToken?.accessToken}`
+                }
+              });
 
             if(!response.ok){
                 throw new Error('Error found');
@@ -51,6 +62,8 @@ export const SciencePlans = () =>{
                     responseJson[key].dataProcRequirements[0].luminance,
                     responseJson[key].dataProcRequirements[0].hue
                 );
+
+                const collab = new AstronomerModel(responseJson[key].collaborator[0].fname, responseJson[key].collaborator[0].lname);
                 
                 const plan = new SciencePlanModel(
                     responseJson[key].planNo,
@@ -63,7 +76,8 @@ export const SciencePlans = () =>{
                     responseJson[key].endDate,
                     responseJson[key].telescopeLocation,
                     dataProcReq,
-                    responseJson[key].status
+                    responseJson[key].status,
+                    collab
                 );
             
                 loadedSciencePlan.push(plan);
@@ -110,10 +124,14 @@ export const SciencePlans = () =>{
     }
 
     return(
-        <div className="container-fluid bs-emphasis-color">
+        <div>
+            <Navbar/>
+            <div className="container-fluid bs-emphasis-color">
             <div className="d-flex mb-1" style={{marginTop: '10px', marginLeft: '15px', marginRight: '15px'}}>
                 <div className="me-auto p-2"><p style={{ fontSize: '26px', fontWeight:'bold'}}>Science Plan</p></div>
-                <div className="p-2" style={{marginTop: '8px'}}><button type="button" className="btn btn-secondary">+ Create a science plan</button></div>
+                <div className="p-2" style={{marginTop: '8px'}}>
+                    <Link type="button" className="btn btn-dark" to={"/createSciencePlan"}><i className="bi bi-plus-lg"></i> Create a science plan</Link>
+                </div>
             </div>
             <div className="row mb-4 ms-3">
                 <div className="col-6">
@@ -172,6 +190,7 @@ export const SciencePlans = () =>{
                     </tbody>
                 </table>
             </div>
+        </div>
         </div>
     );
 }

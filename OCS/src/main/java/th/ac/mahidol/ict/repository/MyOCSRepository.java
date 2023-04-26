@@ -527,62 +527,127 @@ public class MyOCSRepository extends OCS {
     }
 
     // TODO: 23/4/2566 now cannot edit dataProcRequirement
-    public boolean editSciencePlan(int planNo, MySciencePlan mySciencePlan) {
-        String JDBC_DRIVER = "org.h2.Driver";
-        String DB_URL = "jdbc:h2:./ocs";
-        String USER = "sa";
-        String PASS = "";
-        Connection conn = null;
-        Statement stmt = null;
+    public boolean editSciencePlan(int planNo, MySciencePlan sp) {
+        String[] slists = new String[2];
+        String spCreator = sp.getCreator();
+        String spSubmitter = sp.getSubmitter();
+        double spFunding = sp.getFundingInUSD();
+        String spObjective = sp.getObjectives();
+        StarSystem.CONSTELLATIONS spStarSystem = sp.getStarSystem();
+        String spStartDate = null;
+        String spEndDate = null;
+        String errDateformat = null;
+        Date chkSDate = null;
+        Date chkEDate = null;
+        spStartDate = sp.getStartDate();
 
-        boolean var11;
-        try {
-            boolean var10;
+        if (spStartDate != "-1") {
             try {
-
-                Class.forName("org.h2.Driver");
-                conn = DriverManager.getConnection("jdbc:h2:./ocs", "sa", "");
-                stmt = conn.createStatement();
-                String sql = "";
-                sql = " UPDATE MASSCIENCEPLAN SET creator = '" + mySciencePlan.getCreator() + "', submitter = '" + mySciencePlan.getSubmitter() + "', fundingInUSD = '" + mySciencePlan.getFundingInUSD() + "', objectives = '" + mySciencePlan.getObjectives() + "', starSystem = '" + mySciencePlan.getStarSystem() + "', startDate = '" + mySciencePlan.getStartDate() + "', endDate = '" + mySciencePlan.getEndDate() + "', telescopeLocation = '" + mySciencePlan.getTelescopeLocation() + "', SPStatus = '" + mySciencePlan.getStatus() + "' WHERE planNo = " + planNo;
-                stmt.executeUpdate(sql);
-                stmt.close();
-                conn.close();
-                MySciencePlan sp = this.getSciencePlanByNo(planNo);
-                if (sp == null) {
-                    System.out.println("Update science plan is unsuccessful...");
-                    System.out.println("Not found planNo: " + planNo + "\n");
-                    var11 = false;
-                    return var11;
-                }
-                var11 = true;
-            } catch (SQLException var30) {
-                var30.printStackTrace();
-                System.out.println("Edit failed...\n");
-                var10 = false;
-                return var10;
-            } catch (Exception var31) {
-                var31.printStackTrace();
-                System.out.println("Edit failed...\n");
-                var10 = false;
-                return var10;
+                chkSDate = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(spStartDate);
+            } catch (ParseException var46) {
+                var46.printStackTrace();
+                errDateformat = "Date format must be 'dd/MM/yyyy HH:mm:ss'";
             }
-        } finally {
+        } else {
+            errDateformat = "Date format must be 'dd/MM/yyyy HH:mm:ss";
+        }
+
+        spEndDate = sp.getEndDate();
+        if (spEndDate != "-1") {
             try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException var29) {
+                chkEDate = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(spEndDate);
+            } catch (ParseException var45) {
+                var45.printStackTrace();
+                errDateformat = "Date format must be 'dd/MM/yyyy HH:mm:ss'";
             }
+        } else {
+            errDateformat = "Date format must be 'dd/MM/yyyy HH:mm:ss";
+        }
 
+        SciencePlan.TELESCOPELOC spTelescopeLocation = sp.getTelescopeLocation();
+        ArrayList<DataProcRequirement> ListDPR = sp.getDataProcRequirements();
+        List<Astronomer> listCollaborators = sp.getCollaborator();
+        boolean var11 = false;
+
+        if (errDateformat == null) {
+            String JDBC_DRIVER = "org.h2.Driver";
+            String DB_URL = "jdbc:h2:./ocs";
+            String USER = "sa";
+            String PASS = "";
+            Connection conn = null;
+            Statement stmt = null;
             try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException var28) {
-                var28.printStackTrace();
-            }
+                boolean var10;
+                try {
+                    Class.forName("org.h2.Driver");
+                    conn = DriverManager.getConnection("jdbc:h2:./ocs", "sa", "");
+                    stmt = conn.createStatement();
+                    String sql = "";
 
+                    if(spFunding >= 0.0 && spObjective != null && spStarSystem != null && spTelescopeLocation != null){
+                        sql = " UPDATE MASSCIENCEPLAN SET creator = '" + spCreator + "', submitter = '" + spSubmitter + "', fundingInUSD = '" + spFunding + "', objectives = '" + spObjective + "', starSystem = '" + spStarSystem + "', startDate = '" + spStartDate + "', endDate = '" + spEndDate + "', telescopeLocation = '" + spTelescopeLocation + "', SPStatus = '" + "SAVED" + "' WHERE planNo = " + planNo;
+                        stmt.executeUpdate(sql);
+
+                        Iterator listDPR = ListDPR.iterator();
+
+                        while(listDPR.hasNext()) {
+                            DataProcRequirement drp = (DataProcRequirement)listDPR.next();
+                            sql = " UPDATE trDataProcRequirement SET fileType = '" + drp.getFileType() + "', fileQuality = '" + drp.getFileQuality() +  "', colorType = '" + drp.getColorType() +  "', contrast = '" + drp.getContrast() +  "', brightness = '" + drp.getBrightness() +  "', saturation = '" + drp.getSaturation() +  "', highlights = '" + drp.getHighlights() +  "', exposure = '" + drp.getExposure() +  "', shadows = '" + drp.getShadows() +  "', whites = '" + drp.getWhites() +  "', blacks = '" + drp.getBlacks() +  "', luminance = '" + drp.getLuminance() +  "', hue = '" + drp.getHue() + "' WHERE planNo = " + planNo;
+                            stmt.executeUpdate(sql);
+                        }
+
+                        Iterator listCollab = listCollaborators.iterator();
+
+                        while(listCollab.hasNext()) {
+                            Astronomer collab = (Astronomer)listCollab.next();
+                            sql = " UPDATE collaborators SET collabFname = '" + collab.getFname() +  "', collabLname = '" + collab.getLname() + "' WHERE planNo = " + planNo;
+                            stmt.executeUpdate(sql);
+                        }
+
+                        stmt.close();
+                        conn.close();
+                    }
+                    else{
+                        var11 = false;
+                        return var11;
+                    }
+
+                    MySciencePlan spp = this.getSciencePlanByNo(planNo);
+                    if (spp == null) {
+                        System.out.println("Update science plan is unsuccessful...");
+                        System.out.println("Not found planNo: " + planNo + "\n");
+                        var11 = false;
+                        return var11;
+                    }
+                    var11 = true;
+                } catch (SQLException var30) {
+                    var30.printStackTrace();
+                    System.out.println("Edit failed...\n");
+                    var10 = false;
+                    return var10;
+                } catch (Exception var31) {
+                    var31.printStackTrace();
+                    System.out.println("Edit failed...\n");
+                    var10 = false;
+                    return var10;
+                }
+            } finally {
+                try {
+                    if (stmt != null) {
+                        stmt.close();
+                    }
+                } catch (SQLException var29) {
+                }
+
+                try {
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException var28) {
+                    var28.printStackTrace();
+                }
+
+            }
         }
 
         return var11;

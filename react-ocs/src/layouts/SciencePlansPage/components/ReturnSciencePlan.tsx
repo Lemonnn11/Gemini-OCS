@@ -7,7 +7,7 @@ export const ReturnSciencePlan: React.FC<{ sciencePlan: SciencePlanModel }> = (p
     const history = useHistory();
 
     const handleClick = (value: number) => {
-        history.push(`/sciencePlan/${props.sciencePlan.planNo}`);
+        history.push(`/manageSciencePlan/${value}`);
     }
 
     return (
@@ -27,17 +27,25 @@ export const ReturnSciencePlan: React.FC<{ sciencePlan: SciencePlanModel }> = (p
                     {props.sciencePlan.status}
                 </button>
             ) : props.sciencePlan.status === "TESTED" ? (
+                <button className="btn btn-primary">
+                    {props.sciencePlan.status}
+                </button>
+            ) : props.sciencePlan.status === "SUBMITTED" ? (
                 <button className="btn btn-warning">
                     {props.sciencePlan.status}
                 </button>
-            ) : (
+            ): props.sciencePlan.status === "INVALIDATE" ? (
+                <button className="btn btn-danger">
+                    {props.sciencePlan.status}
+                </button>
+            ):
+            (
                 <button className="btn btn-success">
                     {props.sciencePlan.status}
                 </button>
             )}
         </td>
         <td>{props.sciencePlan.creator}</td>
-        <td>{props.sciencePlan.status}</td>
         </tr>
 
 

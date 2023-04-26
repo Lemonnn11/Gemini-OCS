@@ -16,7 +16,7 @@ export const Navbar = () => {
 
     return (
         <nav className='navbar navbar-expand-lg navbar-dark bg-dark shadow'>
-      <div className='container-fluid' style={{margin:'10px'}}>
+      <div className='container-fluid' style={{margin:'10px', marginLeft: '30px'}}>
         <a className='navbar-brand' >Gemini System</a>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav me-auto mb-2 mb-lg-0">
@@ -27,7 +27,7 @@ export const Navbar = () => {
           <NavLink className="nav-link" to="/sciencePlans">SciencePlan</NavLink>
         </li>
       </ul>
-      {authState.isAuthenticated ? <button className="btn btn-outline-success btn-outline-light" type="submit" onClick={handleLogout}>Sign out</button>:  
+      {authState.isAuthenticated ? <button style={{ marginRight: '20px'}} className="btn btn-outline-success btn-outline-light" type="submit" onClick={handleLogout}>Sign out</button>:  
        <Link type="button" className="btn btn-outline-success btn-outline-light" to={"/login"}>Sign in</Link>}
     </div>
       </div>

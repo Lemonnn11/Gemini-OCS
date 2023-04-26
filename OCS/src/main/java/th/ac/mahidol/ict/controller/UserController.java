@@ -30,6 +30,6 @@ public class UserController {
     public ResponseEntity<List<ScienceObserver>> getAllSciencePlans(@RequestHeader(value = "Authorization") String token){
         return new ResponseEntity<>(userService.getScienceObservers(), HttpStatus.OK);
     }
-    
+
 
 }

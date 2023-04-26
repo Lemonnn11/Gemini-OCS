@@ -1,26 +1,16 @@
 import { useEffect, useState } from "react";
 import SciencePlanModel from "../../models/SciencePlanModel";
+import { useOktaAuth } from "@okta/okta-react";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import DataProcRequirementModel from "../../models/DataProcRequirementModel";
-import { useOktaAuth } from '@okta/okta-react';
 import AstronomerModel from "../../models/AstronomerModel";
-import { ScriptTarget } from "typescript";
-import { Navbar } from "../NavbarAndFooter/Navbar1";
-import { Link, useHistory } from "react-router-dom";
 
-export const SciencePlanInfoPage = () => {
+export const ValidateSciencePlan = () => {
 
     const [sciencePlan, setSciencePlan] = useState<SciencePlanModel>();
     const [isLoading, setLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
     const { oktaAuth, authState } = useOktaAuth();
-
-    const history = useHistory();
-
-    const handleClick = () => {
-        const id = (window.location.pathname).split('/')[2];
-        history.push(`/editSciencePlan/${id}`);
-    }
 
     useEffect(() => {
         const fetchSciencePlans = async () => {
@@ -99,17 +89,14 @@ export const SciencePlanInfoPage = () => {
 
     return (
         <div>
-            <div className="container" style={{ marginTop: '30px' }}>
+            <div className="container" style={{ marginTop: '25px', marginBottom: '30px' }}>
 
-                <div className="card shadow" style={{ width: 'rem', borderRadius: '1rem' }}>
+                <div className="card shadow" style={{ width: 'rem', borderRadius: '1rem', marginTop: '25px' }}>
 
                     <div className="card-header">
                         <div className="card-tile d-flex bd-highlight pt-3">
-                            <div className="card-title mx-2" style={{fontWeight: 500}}>PlanNo</div>
-                            <div className="card-title mb-3 text-muted">#0001</div>
-                            <div className="ms-auto bd-highlight">
-                                <button className="btn btn-dark" style={{marginTop: '-6px'}} onClick={handleClick}><i className="bi bi-pen"></i> Edit</button>
-                            </div>
+                            <div className="card-title mx-2" style={{ fontWeight: 500 }}>PlanNo</div>
+                            <div className="card-title mb-2 text-muted">#0001</div>
                         </div>
                     </div>
 
@@ -196,7 +183,7 @@ export const SciencePlanInfoPage = () => {
                                 </div>
 
                             </div>
-                            <div className="col mt-3 mb-2" style={{marginRight: '-60px'}}>
+                            <div className="col mt-3 mb-2" style={{ marginRight: '-60px' }}>
                                 <div className="card-title mb-4" style={{ fontWeight: 500 }}>Data Process Requirements</div>
                                 <div className="row mb-4 mt-3">
                                     <div className="col-sm-6">
@@ -323,10 +310,20 @@ export const SciencePlanInfoPage = () => {
                     </div>
                     <div className="d-flex justify-content-end">
 
-                        <button className="btn btn-warning mb-4 mx-5" type="button">Submit<i className="bi bi-caret-right-fill"></i></button>
+                        <button className="btn btn-success mb-2 mx-5" type="button"><i className="bi bi-check2-circle"></i> Validate</button>
                     </div>
+                    <hr />
+                    <div className="mx-5 mt-3">
+                        <label className="col-sm-6" ><i className="bi bi-chat-left-text"></i> Feedback</label>
+                    </div>
+                    <div className="container-sm mt-2">
+                        <textarea className="form-control mb-3 mx-4" placeholder="Add feedback . . ." id="floatingTextarea" style={{height: '120px', width: '1000px', marginLeft: '13px'}}></textarea>
+                        
+                    </div>
+                    <div className="d-flex justify-content-end">
 
-
+                        <button className="btn btn-danger mb-4 mx-5" type="button"><i className="bi bi-x-circle"></i> Invalidate</button>
+                    </div>
                 </div>
             </div>
         </div>

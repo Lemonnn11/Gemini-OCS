@@ -1,9 +1,9 @@
 import AstronomerModel from "./AstronomerModel";
 import { DataProcRequirementModel } from "./DataProcRequirementModel";
 
-class SciencePlanModel{
-    planNo: number;
-    creator: string;
+class SciencePlanModel2{
+    planNo: number = 0;
+    creator: string = "";
     submitter: string = "";
     fundingInUSD: number;
     objectives: string;
@@ -11,23 +11,20 @@ class SciencePlanModel{
     startDate: string;
     endDate: string;
     telescopeLocation: string;
-    dataProcRequirement: DataProcRequirementModel;
+    dataProcRequirements: DataProcRequirementModel;
     status: string;
     observerFeedback: string = "";
     collaborator: AstronomerModel;
-    constructor(planNo:number, creator: string, submitter: string, fundingInUSD: number, objectives: string, starSystem: string, startDate: string, endDate: string, telescopeLocation: string, dataProcRequirement: DataProcRequirementModel, status: string, collaborator: AstronomerModel){
-        this.planNo = planNo;
-        this.creator = creator;
-        this.submitter = submitter;
+    constructor(fundingInUSD: number, objectives: string, starSystem: string, startDate: string, endDate: string, telescopeLocation: string, dataProcRequirement: DataProcRequirementModel, collaborator: AstronomerModel, status: string){
         this.fundingInUSD =  fundingInUSD;
         this.objectives = objectives;
         this.starSystem = starSystem;
         this.startDate = startDate;
         this.endDate = endDate;
         this.telescopeLocation = telescopeLocation;
-        this.dataProcRequirement = dataProcRequirement;
-        this.status = status;
+        this.dataProcRequirements = dataProcRequirement;
         this.collaborator = collaborator;
+        this.status = status;
     }
 }
-export default SciencePlanModel;
+export default SciencePlanModel2;

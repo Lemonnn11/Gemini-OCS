@@ -152,27 +152,22 @@ export const SciencePlanInfoPage = () => {
         )
     }
 
-    async function submitSciencePlan(event: React.FormEvent<HTMLFormElement>) {
+    async function submitSciencePlan(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
         const url = `http://localhost:8080/sciencePlans/submit`;
-            const [firstName, lastName] = collab.split(" ");
-            const collabora: AstronomerModel = new AstronomerModel(firstName, lastName);
-            const DPR: DataProcRequirementModel = new DataProcRequirementModel(fileType, fileQuality, colorType, parseInt(contrast), parseInt(brightness), parseInt(saturation), parseInt(highlights),
-                parseInt(exposure), parseInt(shadows), parseInt(whites), parseInt(blacks), parseInt(luminance), parseInt(hue))
-            const sciencePlann: SciencePlanModel = new SciencePlanModel(parseInt(planNo), creator, "", parseInt(fundingInUSD), objectives, starSystem, new Date(startDate + 'T' + startTime).toISOString(), new Date(endDate + 'T' + endTime).toISOString(), location,
-                DPR, status, collabora);
-            console.log(JSON.stringify(sciencePlann));
             const request = {
-                method: "POST",
+                method: "PUT",
                 headers: {
                     Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(sciencePlann)
+                body: planNo
             };
 
-            const addNewSciencePlan = await fetch(url, request);
-            if (!addNewSciencePlan) {
+            const submitSciencePlan = await fetch(url, request);
+            if (!submitSciencePlan) {
+                setShowWarning(true);
+                setShowSuccess(false);
                 throw new Error('Error found');
             } else {
                 setShowWarning(false);
@@ -190,7 +185,7 @@ export const SciencePlanInfoPage = () => {
                     <div className="card-header">
                         <div className="card-tile d-flex bd-highlight pt-3">
                             <div className="card-title mx-2" style={{fontWeight: 500}}>PlanNo</div>
-                            <div className="card-title mb-3 text-muted">#0001</div>
+                            <div className="card-title mb-3 text-muted">#000{planNo}</div>
                             <div className="ms-auto bd-highlight">
                                 <button className="btn btn-dark" style={{marginTop: '-6px'}} onClick={handleClick}><i className="bi bi-pen"></i> Edit</button>
                             </div>
@@ -406,8 +401,7 @@ export const SciencePlanInfoPage = () => {
 
                     </div>
                     <div className="d-flex justify-content-end">
-
-                        <button className="btn btn-warning mb-4 mx-5" type="button">Submit<i className="bi bi-caret-right-fill"></i></button>
+                        <button className="btn btn-warning mb-4 mx-5" type="button" onClick={submitSciencePlan}>Submit<i className="bi bi-caret-right-fill"></i></button>
                     </div>
 
 

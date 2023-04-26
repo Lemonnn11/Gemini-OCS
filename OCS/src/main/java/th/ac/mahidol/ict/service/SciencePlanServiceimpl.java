@@ -33,8 +33,24 @@ public class SciencePlanServiceimpl implements SciencePlanService {
     }
 
     @Override
-    public String submitSciencePlan(MySciencePlan sp) {
+    public String submitSciencePlan(MySciencePlan sp, String creatorEmail) {
+        String submitter = null;
+        for (Astronomer astronomer:
+                ocs.getAllAstronomers()) {
+            System.out.println(astronomer.getEmail());
+            System.out.println(creatorEmail.equals(astronomer.getEmail()));
+            if(creatorEmail.equals(astronomer.getEmail())){
+                submitter = astronomer.getFname() + ' ' + astronomer.getLname();
+            }
+        }
+        sp.setSubmitter(submitter);
+        this.editSciencePlanByID(sp.getPlanNo(), sp);
         return ocs.submitSciencePlan(sp);
+    }
+
+    @Override
+    public boolean editSciencePlanByID(int id, MySciencePlan mySciencePlan) {
+        return ocs.editSciencePlan(id, mySciencePlan);
     }
 
     @Override
@@ -49,7 +65,6 @@ public class SciencePlanServiceimpl implements SciencePlanService {
             }
         }
         mySciencePlan.setCreator(creator);
-        System.out.println(mySciencePlan.getStartDate() + " " + mySciencePlan.getEndDate());
         if(this.reserveDateAndTime(mySciencePlan.getStartDate(), mySciencePlan.getEndDate())){
             ocs.createSciencePlan(mySciencePlan);
             return true;
@@ -60,11 +75,6 @@ public class SciencePlanServiceimpl implements SciencePlanService {
     @Override
     public boolean deleteSciencePlanByID(int id) {
         return ocs.deleteSciencePlanByNo(id);
-    }
-
-    @Override
-    public boolean editSciencePlanByID(int id, MySciencePlan mySciencePlan) {
-        return ocs.editSciencePlan(id, mySciencePlan);
     }
 
     @Override

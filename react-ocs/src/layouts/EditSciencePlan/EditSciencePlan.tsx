@@ -240,10 +240,13 @@ export const EditSciencePlanPage = () => {
             if (authState?.isAuthenticated && fundingInUSD !== '' && objectives !== '' && fileType !== '' && fileQuality !== '' && colorType !== '' && contrast !== '' && brightness !== '' 
             && saturation !== '' && highlights !== '' && exposure !== '' && shadows !== ''&& whites !== '' && blacks !== '' && luminance !== '' && hue !== '' && startDate !== '' 
             && startTime !== '' && endDate !== '' && endTime !== '') {
+            console.log(startDate + " " + startTime + " " + endDate + " " + endTime);
             const [firstName, lastName] = collab.split(" ");
             const collabora: AstronomerModel = new AstronomerModel(firstName, lastName);
             const DPR: DataProcRequirementModel = new DataProcRequirementModel(fileType, fileQuality, colorType, parseInt(contrast), parseInt(brightness), parseInt(saturation), parseInt(highlights),
                 parseInt(exposure), parseInt(shadows), parseInt(whites), parseInt(blacks), parseInt(luminance), parseInt(hue))
+            console.log(new Date(startDate + 'T' + startTime))
+            console.log(new Date(endDate + 'T' + endTime))
             const sciencePlann: SciencePlanModel = new SciencePlanModel(parseInt(planNo), creator, "", parseInt(fundingInUSD), objectives, starSystem, new Date(startDate + 'T' + startTime).toISOString(), new Date(endDate + 'T' + endTime).toISOString(), location,
                 DPR, "SAVED",collabora);
             console.log(JSON.stringify(sciencePlann));

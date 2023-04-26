@@ -74,8 +74,9 @@ public class ScienceController {
 
     @CrossOrigin
     @PutMapping("/submit")
-    public ResponseEntity<String> submitSciencePlan(@RequestBody MySciencePlan mySciencePlan){
-        return new ResponseEntity<>(scienceService.submitSciencePlan(mySciencePlan), HttpStatus.OK);
+    public ResponseEntity<String> submitSciencePlan(@RequestHeader(value = "Authorization") String token, @RequestBody int planNo){
+        String email = ExtractJWT.JWTPayloadExtract(token, "\"sub\"");
+        return new ResponseEntity<>(scienceService.submitSciencePlan(scienceService.getSciencePlanById(planNo), email), HttpStatus.OK);
     }
 
     @CrossOrigin

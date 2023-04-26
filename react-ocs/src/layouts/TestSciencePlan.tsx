@@ -1,16 +1,46 @@
 import { useEffect, useState } from "react";
-import SciencePlanModel from "../../models/SciencePlanModel";
+import { SpinnerLoading } from "./Utils/SpinnerLoading";
+import SciencePlanModel from "../models/SciencePlanModel";
 import { useOktaAuth } from "@okta/okta-react";
-import { SpinnerLoading } from "../Utils/SpinnerLoading";
-import DataProcRequirementModel from "../../models/DataProcRequirementModel";
-import AstronomerModel from "../../models/AstronomerModel";
+import { AstronomerModel } from "../models/AstronomerModel";
+import DataProcRequirementModel from "../models/DataProcRequirementModel";
+import AstronomerModel2 from "../models/AstronomerModel2";
 
-export const ValidateSciencePlan = () => {
-
+export const TestSciencePlan = () => {
     const [sciencePlan, setSciencePlan] = useState<SciencePlanModel>();
     const [isLoading, setLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
     const { oktaAuth, authState } = useOktaAuth();
+    const [showWarning, setShowWarning] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+
+    const [planNo, setPlanNo] = useState("");
+    const [creator, setCreator] = useState("");
+    const [status, setStatus] = useState("");
+    const [collab, setCollab] = useState('collaborator');
+    const [objectives, setObjective] = useState('');
+    const [starSystem, setStarSystem] = useState('Star System');
+    const [location, setLocation] = useState('location');
+    const [fundingInUSD, setFunding] = useState("");
+    const [fileType, setFileType] = useState("");
+    const [fileQuality, setFileQuality] = useState("");
+    const [colorType, setColorType] = useState("");
+    const [contrast, setContrast] = useState("");
+    const [brightness, setBrightness] = useState("");
+    const [saturation, setSaturation] = useState("");
+    const [highlights, setHighlights] = useState("");
+    const [exposure, setExposure] = useState("");
+    const [shadows, setShadows] = useState("");
+    const [whites, setWhites] = useState("");
+    const [blacks, setBlacks] = useState("");
+    const [luminance, setLuminance] = useState("");
+    const [hue, setHue] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
+    const [starSystems, setStarSystems] = useState<string[]>([]);
+    const [collaborators, setCollaborators] = useState<AstronomerModel2[]>([]);
 
     useEffect(() => {
         const fetchSciencePlans = async () => {
@@ -46,7 +76,7 @@ export const ValidateSciencePlan = () => {
                 responseJson.dataProcRequirements[0].hue
             );
 
-            const collab = new AstronomerModel(responseJson.collaborator[0].fname, responseJson.collaborator[0].lname);
+            const collab = new AstronomerModel( responseJson.collaborator[0].fname, responseJson.collaborator[0].lname);
 
             const plan = new SciencePlanModel(
                 responseJson.planNo,
@@ -64,8 +94,30 @@ export const ValidateSciencePlan = () => {
             );
 
             setSciencePlan(plan);
+
+            setPlanNo(plan.planNo.toString());
+            setCreator(plan.creator);
+            setStatus(plan.status);
+            setFunding(plan.fundingInUSD?.toString());
+            setObjective(plan.objectives);
+            setStarSystem(plan.starSystem);
+            setCollab(plan.collaborator.fname + " "+ plan.collaborator.lname);
+            setLocation(plan.telescopeLocation);
+            setFileType(plan.dataProcRequirement.fileType);
+            setFileQuality(plan.dataProcRequirement.fileQuality);
+            setColorType(plan.dataProcRequirement.colorType);
+            setContrast(plan.dataProcRequirement.contrast.toString());
+            setBrightness(plan.dataProcRequirement.brightness.toString());
+            setSaturation(plan.dataProcRequirement.saturation.toString());
+            setHighlights(plan.dataProcRequirement.highlights.toString());
+            setExposure(plan.dataProcRequirement.exposure.toString());
+            setShadows(plan.dataProcRequirement.shadows.toString());
+            setWhites(plan.dataProcRequirement.whites.toString());
+            setBlacks(plan.dataProcRequirement.blacks.toString());
+            setLuminance(plan.dataProcRequirement.luminance.toString());
+            setHue(plan.dataProcRequirement.hue.toString());
+
             setLoading(false);
-            console.log(sciencePlan)
         };
         fetchSciencePlans().catch((error: any) => {
             setLoading(false);
@@ -89,17 +141,14 @@ export const ValidateSciencePlan = () => {
 
     return (
         <div>
-            <div className="container" style={{ marginTop: '25px', marginBottom: '30px' }}>
+            <div className="container" style={{ marginTop: '30px' }}>
 
-                <div className="card shadow" style={{ width: 'rem', borderRadius: '1rem', marginTop: '25px' }}>
+                <div className="card shadow" style={{ width: 'rem', borderRadius: '1rem' }}>
 
                     <div className="card-header">
                         <div className="card-tile d-flex bd-highlight pt-3">
-                            <div className="card-title mx-2" style={{ fontWeight: 500 }}>PlanNo</div>
-                            <div className="card-title mb-3 text-muted">#000{sciencePlan?.planNo}</div>
-                            <div className="ms-auto bd-highlight mt-1 mx-2">
-                                <a>Submitted by {sciencePlan?.submitter}</a>
-                            </div>
+                            <div className="card-title mx-2" style={{fontWeight: 500}}>PlanNo</div>
+                            <div className="card-title mb-3 text-muted">#000{planNo}</div>
                         </div>
                     </div>
 
@@ -186,7 +235,7 @@ export const ValidateSciencePlan = () => {
                                 </div>
 
                             </div>
-                            <div className="col mt-3 mb-2" style={{ marginRight: '-60px' }}>
+                            <div className="col mt-3 mb-2" style={{marginRight: '-60px'}}>
                                 <div className="card-title mb-4" style={{ fontWeight: 500 }}>Data Process Requirements</div>
                                 <div className="row mb-4 mt-3">
                                     <div className="col-sm-6">
@@ -312,21 +361,10 @@ export const ValidateSciencePlan = () => {
 
                     </div>
                     <div className="d-flex justify-content-end">
+                        <button className="btn btn-primary mb-4 mx-5" type="button"><i className="bi bi-clipboard-check-fill"></i> Test</button>
+                    </div>
 
-                        <button className="btn btn-success mb-2 mx-5" type="button"><i className="bi bi-check2-circle"></i> Validate</button>
-                    </div>
-                    <hr />
-                    <div className="mx-5 mt-3">
-                        <label className="col-sm-6" ><i className="bi bi-chat-square mx-1"></i> Feedback</label>
-                    </div>
-                    <div className="container-sm mt-2">
-                        <textarea className="form-control mb-3 mx-4" placeholder="Add feedback . . ." id="floatingTextarea" style={{height: '120px', width: '1000px', marginLeft: '13px'}}></textarea>
-                        
-                    </div>
-                    <div className="d-flex justify-content-end">
 
-                        <button className="btn btn-danger mb-4 mx-5" type="button"><i className="bi bi-x-circle"></i> Invalidate</button>
-                    </div>
                 </div>
             </div>
         </div>

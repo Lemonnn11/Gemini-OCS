@@ -180,7 +180,6 @@ export const SciencePlans = () =>{
                             <th scope='col'>endDate</th>
                             <th scope='col'>status</th>
                             <th scope='col'>creator</th>
-                            <th scope='col'></th>
                         </tr>
                     </thead>
                     <tbody className="text-center">

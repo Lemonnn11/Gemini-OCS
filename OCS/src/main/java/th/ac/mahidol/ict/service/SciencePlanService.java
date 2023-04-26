@@ -18,7 +18,7 @@ public interface SciencePlanService {
 
     boolean editSciencePlanByID(int id, MySciencePlan mySciencePlan);
 
-    String submitSciencePlan(MySciencePlan sp);
+    String submitSciencePlan(MySciencePlan sp, String creatorEmail);
 
     List<MySciencePlan> searchSciencePlans(String query);
 

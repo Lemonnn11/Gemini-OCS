@@ -173,7 +173,6 @@ export const SciencePlanInfoPage = () => {
                 setShowWarning(false);
                 setShowSuccess(true);
             }
-
     }
 
     return (
@@ -187,7 +186,7 @@ export const SciencePlanInfoPage = () => {
                             <div className="card-title mx-2" style={{fontWeight: 500}}>PlanNo</div>
                             <div className="card-title mb-3 text-muted">#000{planNo}</div>
                             <div className="ms-auto bd-highlight">
-                                <button className="btn btn-dark" style={{marginTop: '-6px'}} onClick={handleClick}><i className="bi bi-pen"></i> Edit</button>
+                                <button className="btn btn-dark" style={{marginTop: '-6px', marginRight: '10px'}} onClick={handleClick}><i className="bi bi-pen"></i> Edit</button>
                             </div>
                         </div>
                     </div>

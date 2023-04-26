@@ -109,7 +109,32 @@ export const ValidateSciencePlan = () => {
             };
 
             const validateSciencePlan = await fetch(url, request);
-            if (!ValidateSciencePlan) {
+            if (!validateSciencePlan) {
+                setShowWarning(true);
+                setShowSuccess(false);
+                throw new Error('Error found');
+            } else {
+                setShowWarning(false);
+                setShowSuccess(true);
+            }
+
+    }
+
+    async function invalidateSciencePlan(event: React.MouseEvent<HTMLButtonElement>) {
+        event.preventDefault();
+        const url = `http://localhost:8080/sciencePlans/invalidate`;
+            const bd = planNo +  " " + feedback;
+            const request = {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                    "Content-Type": "application/json"
+                },
+                body: bd
+            };
+
+            const validateSciencePlan = await fetch(url, request);
+            if (!validateSciencePlan) {
                 setShowWarning(true);
                 setShowSuccess(false);
                 throw new Error('Error found');
@@ -346,7 +371,7 @@ export const ValidateSciencePlan = () => {
                     </div>
                     <div className="d-flex justify-content-end">
 
-                        <button className="btn btn-success mb-2 mx-5" type="button"><i className="bi bi-check2-circle"></i> Validate</button>
+                        <button className="btn btn-success mb-2 mx-5" type="button" onClick={validateSciencePlan}><i className="bi bi-check2-circle"></i> Validate</button>
                     </div>
                     <hr />
                     <div className="mx-5 mt-3">
@@ -356,7 +381,7 @@ export const ValidateSciencePlan = () => {
                         <textarea className="form-control mb-3 mx-4" name="feedback" placeholder="Add feedback . . ." id="floatingTextarea" style={{height: '120px', width: '1000px', marginLeft: '13px'}} onChange={e => setFeedback(e.target.value)} value={feedback}></textarea>
                     </div>
                     <div className="d-flex justify-content-end">
-                        <button className="btn btn-danger mb-4 mx-5" type="button"><i className="bi bi-x-circle"></i> Invalidate</button>
+                        <button className="btn btn-danger mb-4 mx-5" type="button" onClick={invalidateSciencePlan}><i className="bi bi-x-circle"></i> Invalidate</button>
                     </div>
                 </div>
             </div>

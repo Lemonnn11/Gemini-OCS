@@ -22,6 +22,8 @@ public interface SciencePlanService {
 
     boolean validateSciencePlan(int planNo, SciencePlan.STATUS stssp);
 
+    public boolean invalidateSciencePlan(String feedback, SciencePlan.STATUS stssp);
+
     List<MySciencePlan> searchSciencePlans(String query);
 
     List<MySciencePlan> findSciencePlansByStatus(SciencePlan.STATUS status);

@@ -48,69 +48,69 @@ export const CreateSciencePlanPage = () => {
 
     useEffect(() => {
 
-    const fetchStarSystems = async () => {
+        const fetchStarSystems = async () => {
 
-        const url: string = "http://localhost:8080/resources/starSystem";
+            const url: string = "http://localhost:8080/resources/starSystem";
 
-        const response = await fetch(url, {
-            headers: {
-              "Authorization": `Bearer ${authState?.accessToken?.accessToken}`
+            const response = await fetch(url, {
+                headers: {
+                    "Authorization": `Bearer ${authState?.accessToken?.accessToken}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Error found');
             }
-          });
+            const responseJson = await response.json();
 
-        if (!response.ok) {
-            throw new Error('Error found');
-        }
-        const responseJson = await response.json();
+            const loadedStarSystems: string[] = [];
 
-        const loadedStarSystems: string[] = [];
+            for (const key in responseJson) {
 
-        for (const key in responseJson) {
-
-            loadedStarSystems.push(responseJson[key]);
-        }
-
-        console.log(loadedStarSystems);
-
-        setStarSystems(loadedStarSystems);
-        setLoading(false);
-    };
-
-    const fetchCollaborators = async () => {
-
-        const url: string = "http://localhost:8080/resources/allAstronomer";
-
-        const response = await fetch(url, {
-            headers: {
-              "Authorization": `Bearer ${authState?.accessToken?.accessToken}`
+                loadedStarSystems.push(responseJson[key]);
             }
-          });
 
-        if (!response.ok) {
-            throw new Error('Error foundd');
-        }
-        const responseJson = await response.json();
+            console.log(loadedStarSystems);
 
-        const loadedCollaborators: AstronomerModel2[] = [];
+            setStarSystems(loadedStarSystems);
+            setLoading(false);
+        };
 
-        for (const key in responseJson) {
+        const fetchCollaborators = async () => {
 
-            const person = new AstronomerModel2(
-                responseJson[key].id,
-                responseJson[key].fname,
-                responseJson[key].lname,
-            );
+            const url: string = "http://localhost:8080/resources/allAstronomer";
 
-            loadedCollaborators.push(person);
-        }
+            const response = await fetch(url, {
+                headers: {
+                    "Authorization": `Bearer ${authState?.accessToken?.accessToken}`
+                }
+            });
 
-        setCollaborators(loadedCollaborators);
-        setLoading(false);
-    };
-    fetchStarSystems().catch((error: any) => {
-        setLoading(false);
-        setHttpError(error.message);
-    })
+            if (!response.ok) {
+                throw new Error('Error foundd');
+            }
+            const responseJson = await response.json();
+
+            const loadedCollaborators: AstronomerModel2[] = [];
+
+            for (const key in responseJson) {
+
+                const person = new AstronomerModel2(
+                    responseJson[key].id,
+                    responseJson[key].fname,
+                    responseJson[key].lname,
+                );
+
+                loadedCollaborators.push(person);
+            }
+
+            setCollaborators(loadedCollaborators);
+            setLoading(false);
+        };
+        fetchStarSystems().catch((error: any) => {
+            setLoading(false);
+            setHttpError(error.message);
+        })
         fetchCollaborators().catch((error: any) => {
             setLoading(false);
             setHttpError(error.message);
@@ -211,22 +211,29 @@ export const CreateSciencePlanPage = () => {
         <div>
             <Navbar />
             <div>
+            <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="popup" aria-hidden="true">
+                            <div className="modal-dialog">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h1 className="modal-title fs-5" id="exampleModalLabel">test</h1>
+                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        Create science plan successfully
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" className="btn btn-primary">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                </div>
                 <div>
                 </div>
                 <div className="card shadow" style={{ marginTop: '50px', marginLeft: '160px', marginRight: '160px', borderRadius: '15px' }}>
-                    <div className="card-header pt-3 pb-3 row d-flex justify-content-between" style={{marginLeft: '0.5px', marginRight: '0.5px'}}>
+                    <div className="card-header pt-3 pb-3 row d-flex justify-content-between" style={{ marginLeft: '0.5px', marginRight: '0.5px' }}>
                         <div className="col">
                             <a style={{ fontSize: '25px', fontWeight: 500 }}>Create a science plan</a>
-                        </div>
-                        <div className="col mt-2">
-                            {showSuccess &&
-                                    <a>Create science plan successfully</a>
-                            }
-                            {showWarning &&
-                                <div className="alert alert-danger" role="alert">
-                                    Something went wrong
-                                </div>
-                            }
                         </div>
                     </div>
                     <div className="card-body">
@@ -372,7 +379,7 @@ export const CreateSciencePlanPage = () => {
                                                 <input type="text" className="form-control" name="hue" required onChange={e => setHue(e.target.value)} value={hue} />
                                             </div>
                                             <div className="d-flex justify-content-end">
-                                                <button className="btn btn-primary btn-md mb-3 px-3 pt-2"><i className="bi bi-save"></i> SAVED</button>
+                                                <button className="btn btn-primary btn-md mb-3 px-3 pt-2" data-bs-toggle="modal" data-bs-target="#popup"><i className="bi bi-save"></i> SAVED</button>
                                             </div>
                                         </div>
                                     </div>

@@ -79,6 +79,62 @@ public class MyOCSRepository extends OCS {
         }
     }
 
+    public boolean addFeedback(int planno, String feedback){
+        String JDBC_DRIVER = "org.h2.Driver";
+        String DB_URL = "jdbc:h2:./ocs";
+        String USER = "sa";
+        String PASS = "";
+        Connection conn = null;
+        Statement stmt = null;
+
+        boolean var10;
+        try {
+            Class.forName("org.h2.Driver");
+            conn = DriverManager.getConnection("jdbc:h2:./ocs", "sa", "");
+            stmt = conn.createStatement();
+            String sql = "";
+            String var10000 = feedback;
+            sql = " UPDATE MASSCIENCEPLAN SET SPFeedback = '" + var10000 + "' WHERE planNo = " + planno;
+            stmt.executeUpdate(sql);
+            stmt.close();
+            conn.close();
+            MySciencePlan sp = this.getSciencePlanByNo(planno);
+            boolean var11;
+            if (sp != null) {
+                sp.setObserverFeedback(feedback);
+                var11 = true;
+                return var11;
+            }
+            var11 = false;
+            return var11;
+        } catch (SQLException var30) {
+            var30.printStackTrace();
+            var10 = false;
+        } catch (Exception var31) {
+            var31.printStackTrace();
+            var10 = false;
+            return var10;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException var29) {
+            }
+
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException var28) {
+                var28.printStackTrace();
+            }
+
+        }
+
+        return var10;
+    }
+
     public List<Astronomer> getAllAstronomers(){
         getAstronomersfromAllUser();
         return astronomers;
@@ -122,7 +178,7 @@ public class MyOCSRepository extends OCS {
             stmt.executeUpdate(sql);
             sql = " DROP TABLE IF EXISTS opTable; ";
             stmt.executeUpdate(sql);
-            sql = " CREATE TABLE IF NOT EXISTS masSciencePlan  (planNo INT not NULL,  creator VARCHAR(100),  submitter VARCHAR(100),  fundingInUSD Double,  objectives VARCHAR(255),  starSystem VARCHAR(50),  startDate DateTime ,  endDate DateTime ,  telescopeLocation VARCHAR(50), SPStatus VARCHAR(50), PRIMARY KEY ( planNo ))";
+            sql = " CREATE TABLE IF NOT EXISTS masSciencePlan  (planNo INT not NULL,  creator VARCHAR(100),  submitter VARCHAR(100),  fundingInUSD Double,  objectives VARCHAR(255),  starSystem VARCHAR(50),  startDate DateTime ,  endDate DateTime ,  telescopeLocation VARCHAR(50), SPStatus VARCHAR(50), SPFeedback VARCHAR(500), PRIMARY KEY ( planNo ))";
             stmt.executeUpdate(sql);
             sql = " CREATE TABLE IF NOT EXISTS collaborators  (planNo INT not NULL, collabFname VARCHAR(50), collabLname VARCHAR(50) )";
             stmt.executeUpdate(sql);
@@ -134,7 +190,7 @@ public class MyOCSRepository extends OCS {
             stmt.executeUpdate(sql);
             sql = " CREATE TABLE IF NOT EXISTS opTable  (id INT not NULL auto_increment,  physicalDevice VARCHAR(255),  PRIMARY KEY ( id ) )";
             stmt.executeUpdate(sql);
-            sql = " INSERT INTO masSciencePlan VALUES ( 1,'John Doe','John Doe',1000,'1. To explore Neptune.\n2. To collect astronomical data for future research.','Andromeda','2021-04-15 09:00:00','2021-04-15 10:00:00','HAWAII','TESTED' ); INSERT INTO collaborators VALUES ( 1, 'Elon', 'Musk'); INSERT INTO trDataProcRequirement VALUES ( 1,'PNG','Fine','B&W mode',20,0,0,10,15,5,7,10,0,0 );  INSERT INTO masObservingProgram VALUES(1,'N','GNZ',2.4,16.0,37,'CASSEGRAIN_FOCUS' ,3,'Xenon','CerroPachonSkyEmission'); INSERT INTO masTelePositionPair VALUES(1,135,44); INSERT INTO masTelePositionPair VALUES(1,90,65); INSERT INTO masTelePositionPair VALUES(1,210,35); INSERT INTO masSciencePlan VALUES ( 2,'Jane Dunn','Andrew Griffin',2500,'1. To explore Mars.\n2. To collect astronomical data for future research.','Antlia','2021-05-15 13:00:00','2021-05-15 15:00:00','CHILE','SAVED' ); INSERT INTO collaborators VALUES ( 2, 'Elon', 'Musk'); INSERT INTO trDataProcRequirement VALUES ( 2,'JPEG','Low','Color mode',11,10,5,0,7,0,0,0,10,8 ); INSERT INTO masObservingProgram VALUES(2,'S','GSZ',5.5,12.0,40,'REFLECTIVE_CONVERGING_BEAM' ,1,'Argon','MaunaKeaSkyEmission'); INSERT INTO masTelePositionPair VALUES(2,90,34); INSERT INTO masTelePositionPair VALUES(2,210,70);";
+            sql = " INSERT INTO masSciencePlan VALUES ( 1,'John Doe','John Doe',1000,'1. To explore Neptune.\n2. To collect astronomical data for future research.','Andromeda','2021-04-15 09:00:00','2021-04-15 10:00:00','HAWAII','TESTED','' ); INSERT INTO collaborators VALUES ( 1, 'Elon', 'Musk'); INSERT INTO trDataProcRequirement VALUES ( 1,'PNG','Fine','B&W mode',20,0,0,10,15,5,7,10,0,0 );  INSERT INTO masObservingProgram VALUES(1,'N','GNZ',2.4,16.0,37,'CASSEGRAIN_FOCUS' ,3,'Xenon','CerroPachonSkyEmission'); INSERT INTO masTelePositionPair VALUES(1,135,44); INSERT INTO masTelePositionPair VALUES(1,90,65); INSERT INTO masTelePositionPair VALUES(1,210,35); INSERT INTO masSciencePlan VALUES ( 2,'Jane Dunn','Andrew Griffin',2500,'1. To explore Mars.\n2. To collect astronomical data for future research.','Antlia','2021-05-15 13:00:00','2021-05-15 15:00:00','CHILE','SAVED', '' ); INSERT INTO collaborators VALUES ( 2, 'Elon', 'Musk'); INSERT INTO trDataProcRequirement VALUES ( 2,'JPEG','Low','Color mode',11,10,5,0,7,0,0,0,10,8 ); INSERT INTO masObservingProgram VALUES(2,'S','GSZ',5.5,12.0,40,'REFLECTIVE_CONVERGING_BEAM' ,1,'Argon','MaunaKeaSkyEmission'); INSERT INTO masTelePositionPair VALUES(2,90,34); INSERT INTO masTelePositionPair VALUES(2,210,70);";
             stmt.executeUpdate(sql);
             stmt.close();
             conn.close();
@@ -251,7 +307,7 @@ public class MyOCSRepository extends OCS {
                     }
 
                     if (spFunding >= 0.0) {
-                        sql = " INSERT INTO MASSCIENCEPLAN VALUES (" + curplanNo + ",'" + spCreator + "','" + spSubmitter + "'," + spFunding + ",'" + spObjective + "','" + String.valueOf(spStarSystem) + "','" + spStartDate + "','" + spEndDate + "','" + String.valueOf(spTelescopeLocation) + "','SAVED' );";
+                        sql = " INSERT INTO MASSCIENCEPLAN VALUES (" + curplanNo + ",'" + spCreator + "','" + spSubmitter + "'," + spFunding + ",'" + spObjective + "','" + String.valueOf(spStarSystem) + "','" + spStartDate + "','" + spEndDate + "','" + String.valueOf(spTelescopeLocation) + "','SAVED', '' );" ;
                         stmt.executeUpdate(sql);
                         Iterator var26 = ListDPR.iterator();
 
@@ -374,6 +430,7 @@ public class MyOCSRepository extends OCS {
                 eDate = edf2.format(sdf.parse(eDate));
                 sp1.setEndDate(eDate);
                 sp1.setStatus(SciencePlan.STATUS.valueOf(rs.getString("SPStatus")));
+                sp1.setObserverFeedback(rs.getString("SPFeedback"));
                 String sql1 = "SELECT * FROM trDataProcRequirement WHERE planNo = " + rs.getInt("planNo");
                 stmt1 = conn.createStatement();
                 ResultSet rs1 = stmt1.executeQuery(sql1);

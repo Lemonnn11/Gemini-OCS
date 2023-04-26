@@ -49,6 +49,19 @@ public class SciencePlanServiceimpl implements SciencePlanService {
     }
 
     @Override
+    public boolean invalidateSciencePlan(String feedback, SciencePlan.STATUS stssp) {
+        String[] str = feedback.split(" ");
+        int planNo = Integer.parseInt(str[0]);
+        feedback = str[1];
+        boolean res1 = ocs.addFeedback(planNo, feedback);
+        boolean res2 = ocs.updateSciencePlanStatus(planNo, stssp);
+        if(res1 && res2){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean validateSciencePlan(int planNo, SciencePlan.STATUS stssp) {
         return ocs.updateSciencePlanStatus(planNo, stssp);
     }

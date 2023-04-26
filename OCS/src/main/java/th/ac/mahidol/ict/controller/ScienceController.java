@@ -48,6 +48,16 @@ public class ScienceController {
     }
 
     @CrossOrigin
+    @PutMapping ("/invalidate")
+    public ResponseEntity<HttpStatus> invalidateSciencePlan(@RequestBody String feedback) {
+        boolean res = scienceService.invalidateSciencePlan(feedback, SciencePlan.STATUS.valueOf("INVALIDATED"));
+        if(res){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    }
+
+    @CrossOrigin
     @GetMapping("/search")
     public ResponseEntity<List<MySciencePlan>> getSciencePlanByQuery(@RequestParam("query") String query) {
         return new ResponseEntity<>(scienceService.searchSciencePlans(query), HttpStatus.OK);

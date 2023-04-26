@@ -34,7 +34,7 @@ export const ReturnSciencePlan: React.FC<{ sciencePlan: SciencePlanModel }> = (p
                 <button className="btn btn-warning">
                     {props.sciencePlan.status}
                 </button>
-            ): props.sciencePlan.status === "INVALIDATE" ? (
+            ): props.sciencePlan.status === "INVALIDATED" ? (
                 <button className="btn btn-danger">
                     {props.sciencePlan.status}
                 </button>

@@ -4,6 +4,7 @@ import { useOktaAuth } from "@okta/okta-react";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import DataProcRequirementModel from "../../models/DataProcRequirementModel";
 import AstronomerModel from "../../models/AstronomerModel";
+import { useHistory } from "react-router-dom";
 
 export const ValidateSciencePlan = () => {
 
@@ -11,6 +12,10 @@ export const ValidateSciencePlan = () => {
     const [isLoading, setLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
     const { oktaAuth, authState } = useOktaAuth();
+    const [feedback, setFeedback] = useState("");
+    const history = useHistory();
+
+    
 
     useEffect(() => {
         const fetchSciencePlans = async () => {
@@ -85,6 +90,30 @@ export const ValidateSciencePlan = () => {
                 <p>{httpError}</p>
             </div>
         )
+    }
+
+    async function validateSciencePlan(event: React.MouseEvent<HTMLButtonElement>) {
+        event.preventDefault();
+        const url = `http://localhost:8080/sciencePlans/submit`;
+            const request = {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                    "Content-Type": "application/json"
+                },
+                body: planNo
+            };
+
+            const submitSciencePlan = await fetch(url, request);
+            if (!submitSciencePlan) {
+                setShowWarning(true);
+                setShowSuccess(false);
+                throw new Error('Error found');
+            } else {
+                setShowWarning(false);
+                setShowSuccess(true);
+            }
+
     }
 
     return (
@@ -320,11 +349,9 @@ export const ValidateSciencePlan = () => {
                         <label className="col-sm-6" ><i className="bi bi-chat-square mx-1"></i> Feedback</label>
                     </div>
                     <div className="container-sm mt-2">
-                        <textarea className="form-control mb-3 mx-4" placeholder="Add feedback . . ." id="floatingTextarea" style={{height: '120px', width: '1000px', marginLeft: '13px'}}></textarea>
-                        
+                        <textarea className="form-control mb-3 mx-4" name="feedback" placeholder="Add feedback . . ." id="floatingTextarea" style={{height: '120px', width: '1000px', marginLeft: '13px'}} onChange={e => setFeedback(e.target.value)} value={feedback}></textarea>
                     </div>
                     <div className="d-flex justify-content-end">
-
                         <button className="btn btn-danger mb-4 mx-5" type="button"><i className="bi bi-x-circle"></i> Invalidate</button>
                     </div>
                 </div>

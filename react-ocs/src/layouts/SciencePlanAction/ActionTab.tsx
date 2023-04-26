@@ -65,13 +65,13 @@ export const ActionTab = () => {
                     <div className="nav" role="tablist" style={{ marginLeft: '15px' }}>
                         <ul className="nav nav-underline">
                             <li className="nav-item">
-                                {status === "SAVED" ? (<a className="nav-link active text-dark" data-bs-toggle="tab" data-bs-target="#test-tab" aria-current="page">Test</a>) : (<a className="nav-link text-dark" data-bs-toggle="tab" data-bs-target="#test-tab" aria-current="page">Test</a>)}
+                                 <a className={`nav-link text-dark ${status === "SAVED" ? "active": "disabled" }`} data-bs-toggle="tab" data-bs-target="#test-tab" aria-current="page">Test</a>
                             </li>
                             <li className="nav-item">
-                                {status === "TESTED" ? (<a className="nav-link active text-dark" data-bs-toggle="tab" data-bs-target="#submit-tab" aria-current="page">Submit</a>) : (<a className="nav-link text-dark" data-bs-toggle="tab" data-bs-target="#submit-tab" aria-current="page">Submit</a>)}
+                                <a className={`nav-link text-dark ${status === "TESTED" ? "active": "disabled" }`} data-bs-toggle="tab" data-bs-target="#submit-tab" aria-current="page">Submit</a>
                             </li>
                             <li className="nav-item">
-                                {status === "SUBMITTED" ? (<a className="nav-link active text-dark" data-bs-toggle="tab" data-bs-target="#validate-tab" aria-current="page">Validate</a>) : (<a className="nav-link text-dark" data-bs-toggle="tab" data-bs-target="#validate-tab" aria-current="page">Validate</a>)}
+                                <a className={`nav-link text-dark ${status === "SUBMITTED" ? "active": "disabled" }`} data-bs-toggle="tab" data-bs-target="#validate-tab" aria-current="page">Validate</a>
                             </li>
                         </ul>
                     </div>

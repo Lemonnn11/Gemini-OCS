@@ -211,22 +211,21 @@ export const CreateSciencePlanPage = () => {
         <div>
             <Navbar />
             <div>
-            <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="popup" aria-hidden="true">
-                            <div className="modal-dialog">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h1 className="modal-title fs-5" id="exampleModalLabel">test</h1>
-                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div className="modal-body">
-                                        Create science plan successfully
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" className="btn btn-primary">Save changes</button>
-                                    </div>
-                                </div>
+                <div className="modal fade" id="popup" tabIndex={-1} aria-labelledby="popup" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h2 className="modal-title fs-5" id="popup">create a science plan</h2>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <div className="modal-body">
+                                {showSuccess ? "Create science plan successfully": "Something went wrong"}
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div>
                 </div>

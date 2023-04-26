@@ -14,7 +14,9 @@ export const ValidateSciencePlan = () => {
     const { oktaAuth, authState } = useOktaAuth();
     const [feedback, setFeedback] = useState("");
     const history = useHistory();
-
+    const [showWarning, setShowWarning] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [planNo, setPlanNo] = useState("");
     
 
     useEffect(() => {
@@ -69,6 +71,8 @@ export const ValidateSciencePlan = () => {
             );
 
             setSciencePlan(plan);
+            setPlanNo(plan.planNo.toString());
+
             setLoading(false);
             console.log(sciencePlan)
         };
@@ -94,7 +98,7 @@ export const ValidateSciencePlan = () => {
 
     async function validateSciencePlan(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
-        const url = `http://localhost:8080/sciencePlans/submit`;
+        const url = `http://localhost:8080/sciencePlans/validate`;
             const request = {
                 method: "PUT",
                 headers: {
@@ -104,8 +108,8 @@ export const ValidateSciencePlan = () => {
                 body: planNo
             };
 
-            const submitSciencePlan = await fetch(url, request);
-            if (!submitSciencePlan) {
+            const validateSciencePlan = await fetch(url, request);
+            if (!ValidateSciencePlan) {
                 setShowWarning(true);
                 setShowSuccess(false);
                 throw new Error('Error found');

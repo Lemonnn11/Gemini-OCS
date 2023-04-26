@@ -20,6 +20,8 @@ public interface SciencePlanService {
 
     String submitSciencePlan(MySciencePlan sp, String creatorEmail);
 
+    boolean validateSciencePlan(int planNo, SciencePlan.STATUS stssp);
+
     List<MySciencePlan> searchSciencePlans(String query);
 
     List<MySciencePlan> findSciencePlansByStatus(SciencePlan.STATUS status);

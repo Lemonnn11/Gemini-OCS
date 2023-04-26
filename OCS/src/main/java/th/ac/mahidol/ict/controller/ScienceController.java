@@ -37,7 +37,15 @@ public class ScienceController {
         return new ResponseEntity<>(scienceService.getTelescopeLocations(), HttpStatus.OK);
     }
 
-
+    @CrossOrigin
+    @PutMapping ("/validate")
+    public ResponseEntity<HttpStatus> validateSciencePlan(@RequestBody int planNo) {
+        boolean res = scienceService.validateSciencePlan(planNo, SciencePlan.STATUS.valueOf("VALIDATED"));
+        if(res){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    }
 
     @CrossOrigin
     @GetMapping("/search")

@@ -49,6 +49,11 @@ public class SciencePlanServiceimpl implements SciencePlanService {
     }
 
     @Override
+    public boolean validateSciencePlan(int planNo, SciencePlan.STATUS stssp) {
+        return ocs.updateSciencePlanStatus(planNo, stssp);
+    }
+
+    @Override
     public boolean editSciencePlanByID(int id, MySciencePlan mySciencePlan) {
         return ocs.editSciencePlan(id, mySciencePlan);
     }

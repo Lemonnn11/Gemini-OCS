@@ -50,7 +50,7 @@ public class SciencePlanServiceimpl implements SciencePlanService {
 
     @Override
     public boolean invalidateSciencePlan(String feedback, SciencePlan.STATUS stssp) {
-        String[] str = feedback.split(" ");
+        String[] str = feedback.split(" ", 2);
         int planNo = Integer.parseInt(str[0]);
         feedback = str[1];
         boolean res1 = ocs.addFeedback(planNo, feedback);

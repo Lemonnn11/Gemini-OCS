@@ -180,9 +180,9 @@ export const InvalidatedSciencePlanPage = () => {
 
     return (
         <div>
-            <div className="container" style={{ marginTop: '30px' }}>
+            <div className="container" style={{ marginTop: '30px' , marginBottom: '153px'}}>
 
-                <div className="card shadow" style={{ width: 'rem', borderRadius: '1rem' }}>
+                <div className="card shadow" style={{ width: 'rem', height: '400px', borderRadius: '1rem' }}>
 
                     <div className="card-header">
                         <div className="card-tile d-flex bd-highlight pt-3">
@@ -195,7 +195,7 @@ export const InvalidatedSciencePlanPage = () => {
                         <div className="row">
                             <div className="col mt-3" style={{ marginLeft: '40px' }}>
                                 <div className="row">
-                                    <div className="card-title" style={{ fontWeight: 500 }}>Science Plan</div>
+                                    <div className="card-title" style={{ fontWeight: 500 }}><i className="bi bi-chat-square mx-1"></i> Feedback</div>
                                 </div>
                                 <div className="row mb-4 mt-3">
                                             <div className="col-sm-5">

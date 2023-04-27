@@ -13,6 +13,9 @@ export const ReturnSciencePlan: React.FC<{ sciencePlan: SciencePlanModel }> = (p
     }
 
     async function deleteSciencePlan(event: React.MouseEvent<HTMLButtonElement>) {
+        if(authState?.accessToken?.claims.userType === "scienceObserver"){
+        return <Redirect to={'/sciencePlans'}/>
+        }
         event.preventDefault();
         // const data = new FormData();
         // data.append('id', props.sciencePlan.planNo.toString());

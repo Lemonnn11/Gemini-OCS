@@ -11,7 +11,6 @@ export const Homepage = () => {
         <div>
             {authState?.isAuthenticated ? <Navbar/>: <Navbarr/>}
             <div className="d-flex justify-content-center mt-5">Welcome to OCS</div>
-            <img src="telescope1"/>
         </div>
     );
 }

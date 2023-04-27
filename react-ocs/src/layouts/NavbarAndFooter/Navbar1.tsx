@@ -29,7 +29,7 @@ export const Navbar = () => {
         </li>
       </ul>
       {authState.isAuthenticated ? <button style={{ marginRight: '20px'}} className="btn btn-outline-success btn-outline-light" type="submit" onClick={handleLogout}>Sign out</button>:  
-       <Link type="button" className="btn btn-outline-success btn-outline-light" to={"/login"}>Sign in</Link>}
+       <Link type="button" style={{marginRight: '20px'}} className="btn btn-outline-success btn-outline-light" to={"/login"}>Sign in</Link>}
     </div>
       </div>
     </nav>

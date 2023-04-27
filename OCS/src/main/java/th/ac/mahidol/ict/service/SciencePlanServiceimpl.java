@@ -20,7 +20,7 @@ import java.util.List;
 public class SciencePlanServiceimpl implements SciencePlanService {
 
     @Autowired
-    private MyOCSRepository ocs = new MyOCSRepository(true);
+    private MyOCSRepository ocs;
 
     @Override
     public List<MySciencePlan> getSciencePlans() {

@@ -31,6 +31,8 @@ function App() {
     <div>
       <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreToOriginalUri} onAuthRequired={customSignInHandler}>
       <Switch>
+      <Route path={"/login"} render={() => <SignInWidget config={LoginCallback}/>}/>
+
         <Route path={"/"} exact>
           <Homepage />
         </Route>
@@ -54,8 +56,6 @@ function App() {
         <Route path={"/manageSciencePlan/:planNo"}>
           <ActionTab />
         </Route>
-
-        <Route path={"/login"} render={() => <SignInWidget config={LoginCallback}/>}/>
       </Switch>
       </Security>
     </div>

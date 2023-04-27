@@ -6,11 +6,26 @@
   font-family: 'Poppins', sans-serif;
 }
 
+.login{
+  background-image: url(./images/galaxy.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  justify-content: center;
+}
+
 .homepage{
   background-image: url(./images/telescope2.jpg);
   background-size: cover;
   width: 100;
   height: 100;
+}
+
+.home{
+  background-image: url(./images/telescope.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100.1%;
+  background-clip: content-box;
 }
 
 #okta-sign-in * {

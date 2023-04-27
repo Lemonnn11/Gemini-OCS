@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { oktaConfig } from '../lib/oktaConfig';
 import OktaSignIn from '@okta/okta-signin-widget';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
+import { Navbar } from '../layouts/NavbarAndFooter/Navbar1';
 
 const OktaWidget = ({ isSuccess, isError }) => {
     const widgetRef = useRef();
@@ -21,8 +22,12 @@ const OktaWidget = ({ isSuccess, isError }) => {
     }, [isSuccess, isError])
 
     return(
-        <div className='container mt-5 mb-5'>
-            <div ref={widgetRef}></div>
+        <div>
+            <div className='login' style={{paddingTop: '50px', paddingBottom: '249px'}}>
+            <div className='container mb-5' style={{marginTop: '160px'}}>
+                <div ref={widgetRef}></div>
+            </div>
+        </div>
         </div>
     );
 }

@@ -245,10 +245,16 @@ export const EditSciencePlanPage = () => {
             const collabora: AstronomerModel = new AstronomerModel(firstName, lastName);
             const DPR: DataProcRequirementModel = new DataProcRequirementModel(fileType, fileQuality, colorType, parseInt(contrast), parseInt(brightness), parseInt(saturation), parseInt(highlights),
                 parseInt(exposure), parseInt(shadows), parseInt(whites), parseInt(blacks), parseInt(luminance), parseInt(hue))
-            console.log(new Date(startDate + 'T' + startTime))
-            console.log(new Date(endDate + 'T' + endTime))
+            // console.log(new Date(startDate + 'T' + startTime))
+            // console.log(new Date(endDate + 'T' + endTime))
             const sciencePlann: SciencePlanModel = new SciencePlanModel(parseInt(planNo), creator, "", parseInt(fundingInUSD), objectives, starSystem, new Date(startDate + 'T' + startTime).toISOString(), new Date(endDate + 'T' + endTime).toISOString(), location,
                 DPR, "SAVED",collabora);
+            const gmtOffset = +7 * 60; // GMT-5 time zone (5 hours behind UTC)
+            const sd = new Date(sciencePlann.startDate);
+            const gmtsDate = new Date(sd.getTime() + gmtOffset * 60000);
+            const ed = new Date(sciencePlann.endDate);
+            const gmteDate = new Date(ed.getTime() + gmtOffset * 60000);
+            sciencePlann.setDates(gmtsDate, gmteDate);
             console.log(JSON.stringify(sciencePlann));
             const request = {
                 method: "PUT",
@@ -274,12 +280,28 @@ export const EditSciencePlanPage = () => {
         }
 
         return (
-            <div>
+            <div className="create" style={{paddingBottom: '56px'}}>
                 <Navbar />
+                <div className="modal fade" id="popup" tabIndex={-1} aria-labelledby="popup" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h2 className="modal-title fs-5" id="popup">Edit a science plan</h2>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                            {showWarning ? "Please fill in all required information.":showSuccess ? "Edit science plan successfully": "Date and Time is already taken, Please try again."}
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div>
                     <div>
                     </div>
-                    <div className="card shadow" style={{ marginTop: '50px', marginLeft: '160px', marginRight: '160px', borderRadius: '15px' }}>
+                    <div className="card shadow" style={{ marginTop: '47px', marginLeft: '160px', marginRight: '160px', borderRadius: '15px' }}>
                         <div className="card-header pt-3 pb-3 row d-flex justify-content-between" style={{marginLeft: '0.5px', marginRight: '0.5px'}}>
                             <div className="col">
                                 <a style={{ fontSize: '25px', fontWeight: 500 }}>Edit science plan</a>
@@ -438,7 +460,7 @@ export const EditSciencePlanPage = () => {
                                                     <input type="text" className="form-control" name="hue" required onChange={e => setHue(e.target.value)} value={hue} />
                                                 </div>
                                                 <div className="d-flex justify-content-end">
-                                                    <button className="btn btn-primary btn-md mb-3 px-3 pt-2"><i className="bi bi-save"></i> SAVED</button>
+                                                    <button className="btn btn-primary btn-md mb-3 px-3 pt-2" data-bs-toggle="modal" data-bs-target="#popup"><i className="bi bi-save"></i> SAVED</button>
                                                 </div>
                                             </div>
                                         </div>

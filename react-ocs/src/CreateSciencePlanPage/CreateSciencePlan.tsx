@@ -9,6 +9,7 @@ import DataProcRequirementModel from "../models/DataProcRequirementModel";
 import SciencePlanModel from "../models/SciencePlanModel";
 import SciencePlanModel2 from "../models/SciencePlanModel2";
 import AstronomerModel2 from "../models/AstronomerModel2";
+import { Redirect } from "react-router-dom";
 
 
 export const CreateSciencePlanPage = () => {
@@ -18,35 +19,36 @@ export const CreateSciencePlanPage = () => {
     const [isLoading, setLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
     const { oktaAuth, authState } = useOktaAuth();
-
+    const [showDateInvalid, setDateInvalid] = useState(false);
 
     const [collab, setCollab] = useState('collaborator');
     const [objectives, setObjective] = useState('');
     const [starSystem, setStarSystem] = useState('Star System');
     const [location, setLocation] = useState('location');
-    const [fundingInUSD, setFunding] = useState("");
-    const [fileType, setFileType] = useState("");
-    const [fileQuality, setFileQuality] = useState("");
-    const [colorType, setColorType] = useState("");
-    const [contrast, setContrast] = useState("");
-    const [brightness, setBrightness] = useState("");
-    const [saturation, setSaturation] = useState("");
-    const [highlights, setHighlights] = useState("");
-    const [exposure, setExposure] = useState("");
-    const [shadows, setShadows] = useState("");
-    const [whites, setWhites] = useState("");
-    const [blacks, setBlacks] = useState("");
-    const [luminance, setLuminance] = useState("");
-    const [hue, setHue] = useState("");
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
-    const [startTime, setStartTime] = useState("");
-    const [endTime, setEndTime] = useState("");
+    const [fundingInUSD, setFunding] = useState('');
+    const [fileType, setFileType] = useState('');
+    const [fileQuality, setFileQuality] = useState('');
+    const [colorType, setColorType] = useState('');
+    const [contrast, setContrast] = useState('');
+    const [brightness, setBrightness] = useState('');
+    const [saturation, setSaturation] = useState('');
+    const [highlights, setHighlights] = useState('');
+    const [exposure, setExposure] = useState('');
+    const [shadows, setShadows] = useState('');
+    const [whites, setWhites] = useState('');
+    const [blacks, setBlacks] = useState('');
+    const [luminance, setLuminance] = useState('');
+    const [hue, setHue] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
     const [starSystems, setStarSystems] = useState<string[]>([]);
     const [collaborators, setCollaborators] = useState<AstronomerModel2[]>([]);
 
 
     useEffect(() => {
+
 
         const fetchStarSystems = async () => {
 
@@ -153,12 +155,22 @@ export const CreateSciencePlanPage = () => {
         if (authState?.isAuthenticated && collab !== 'collaborator' && fundingInUSD !== '' && starSystem !== 'Star System' && location !== 'location' && objectives !== ''
             && fileType !== '' && fileQuality !== '' && colorType !== '' && contrast !== '' && brightness !== '' && saturation !== '' && highlights !== '' && exposure !== '' && shadows !== ''
             && whites !== '' && blacks !== '' && luminance !== '' && hue !== '' && startDate !== '' && startTime !== '' && endDate !== '' && endTime !== '') {
+            // const sd = new Date(startDate + 'T' + startTime);
+            // const gmtOffset = +7 * 60; // GMT-5 time zone (5 hours behind UTC)
+            // const gmtDate = new Date(sd.getTime() + gmtOffset * 60000);
+            // console.log(gmtDate);
             const [firstName, lastName] = collab.split(" ");
             const collabora: AstronomerModel = new AstronomerModel(firstName, lastName);
             const DPR: DataProcRequirementModel = new DataProcRequirementModel(fileType, fileQuality, colorType, parseInt(contrast), parseInt(brightness), parseInt(saturation), parseInt(highlights),
                 parseInt(exposure), parseInt(shadows), parseInt(whites), parseInt(blacks), parseInt(luminance), parseInt(hue))
             const sciencePlann: SciencePlanModel2 = new SciencePlanModel2(parseInt(fundingInUSD), objectives, starSystem, new Date(startDate + 'T' + startTime).toISOString(), new Date(endDate + 'T' + endTime).toISOString(), location,
                 DPR, collabora, "SAVED");
+            const gmtOffset = +7 * 60; // GMT-5 time zone (5 hours behind UTC)
+            const sd = new Date(sciencePlann.startDate);
+            const gmtsDate = new Date(sd.getTime() + gmtOffset * 60000);
+            const ed = new Date(sciencePlann.endDate);
+            const gmteDate = new Date(ed.getTime() + gmtOffset * 60000);
+            sciencePlann.setDates(gmtsDate, gmteDate);
             console.log(JSON.stringify(sciencePlann));
             const request = {
                 method: "POST",
@@ -172,7 +184,10 @@ export const CreateSciencePlanPage = () => {
             const addNewSciencePlan = await fetch(url, request);
             if (!addNewSciencePlan) {
                 throw new Error('Error found');
-            } else {
+            } 
+            else if(!addNewSciencePlan.ok){
+                setDateInvalid(true);
+            }else {
                 setShowWarning(false);
                 setShowSuccess(true);
             }
@@ -207,19 +222,23 @@ export const CreateSciencePlanPage = () => {
 
     }
 
+    if(authState?.accessToken?.claims.userType === "scienceObserver"){
+        return <Redirect to={'/sciencePlans'}/>
+    }
+
     return (
-        <div>
+        <div >
             <Navbar />
-            <div>
+            <div className="create" style={{paddingBottom: '56px'}}>
                 <div className="modal fade" id="popup" tabIndex={-1} aria-labelledby="popup" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h2 className="modal-title fs-5" id="popup">create a science plan</h2>
+                                <h2 className="modal-title fs-5" id="popup">Create a science plan</h2>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                {showSuccess ? "Create science plan successfully": "Something went wrong"}
+                                {showDateInvalid ? "Date and Time is already taken, Please try again.": showSuccess ? "Create science plan successfully.":"Please fill in all required information."}
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -229,7 +248,7 @@ export const CreateSciencePlanPage = () => {
                 </div>
                 <div>
                 </div>
-                <div className="card shadow" style={{ marginTop: '50px', marginLeft: '160px', marginRight: '160px', borderRadius: '15px' }}>
+                <div className="card shadow" style={{ marginTop: '47px', marginLeft: '160px', marginRight: '160px', borderRadius: '15px' }}>
                     <div className="card-header pt-3 pb-3 row d-flex justify-content-between" style={{ marginLeft: '0.5px', marginRight: '0.5px' }}>
                         <div className="col">
                             <a style={{ fontSize: '25px', fontWeight: 500 }}>Create a science plan</a>

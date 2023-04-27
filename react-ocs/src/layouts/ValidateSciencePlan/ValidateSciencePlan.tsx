@@ -17,7 +17,8 @@ export const ValidateSciencePlan = () => {
     const [showWarning, setShowWarning] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [planNo, setPlanNo] = useState("");
-    
+    const [validate, setValidate] = useState(false);
+
 
     useEffect(() => {
         const fetchSciencePlans = async () => {
@@ -99,55 +100,57 @@ export const ValidateSciencePlan = () => {
     async function validateSciencePlan(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
         const url = `http://localhost:8080/sciencePlans/validate`;
-            const request = {
-                method: "PUT",
-                headers: {
-                    Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
-                    "Content-Type": "application/json"
-                },
-                body: planNo
-            };
+        const request = {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body: planNo
+        };
 
-            const validateSciencePlan = await fetch(url, request);
-            if (!validateSciencePlan) {
-                setShowWarning(true);
-                setShowSuccess(false);
-                throw new Error('Error found');
-            } else {
-                setShowWarning(false);
-                setShowSuccess(true);
-            }
+        const validateSciencePlan = await fetch(url, request);
+        if (!validateSciencePlan) {
+            setShowWarning(true);
+            setShowSuccess(false);
+            throw new Error('Error found');
+        } else {
+            setShowWarning(false);
+            setShowSuccess(true);
+        }
 
+        setValidate(true);
     }
 
     async function invalidateSciencePlan(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
         const url = `http://localhost:8080/sciencePlans/invalidate`;
-            const bd = planNo +  " " + feedback;
-            const request = {
-                method: "PUT",
-                headers: {
-                    Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
-                    "Content-Type": "application/json"
-                },
-                body: bd
-            };
+        const bd = planNo + " " + feedback;
+        const request = {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body: bd
+        };
 
-            const validateSciencePlan = await fetch(url, request);
-            if (!validateSciencePlan) {
-                setShowWarning(true);
-                setShowSuccess(false);
-                throw new Error('Error found');
-            } else {
-                setShowWarning(false);
-                setShowSuccess(true);
-            }
+        const validateSciencePlan = await fetch(url, request);
+        if (!validateSciencePlan) {
+            setShowWarning(true);
+            setShowSuccess(false);
+            throw new Error('Error found');
+        } else {
+            setShowWarning(false);
+            setShowSuccess(true);
+        }
 
+        setValidate(false);
     }
 
     return (
         <div>
-            <div className="container" style={{ marginTop: '25px', marginBottom: '30px' }}>
+            <div className="container" style={{ marginTop: '25px'}}>
 
                 <div className="card shadow" style={{ width: 'rem', borderRadius: '1rem', marginTop: '25px' }}>
 
@@ -370,18 +373,33 @@ export const ValidateSciencePlan = () => {
 
                     </div>
                     <div className="d-flex justify-content-end">
-
-                        <button className="btn btn-success mb-2 mx-5" type="button" onClick={validateSciencePlan}><i className="bi bi-check2-circle"></i> Validate</button>
+                        <div className="modal fade" id="exampleModal"  tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div className="modal-dialog modal-dialog-centered">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h1 className="modal-title fs-5" id="exampleModalLabel">Validate a science plan</h1>
+                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        {validate === true ? "Validate successfully":"Validate unsuccessfully"}
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button className="btn btn-success mb-2 mx-5" type="button" onClick={validateSciencePlan} data-bs-toggle="modal" data-bs-target="#exampleModal"><i className="bi bi-check2-circle"></i> Validate</button>
                     </div>
                     <hr />
                     <div className="mx-5 mt-3">
                         <label className="col-sm-6" ><i className="bi bi-chat-square mx-1"></i> Feedback</label>
                     </div>
                     <div className="container-sm mt-2">
-                        <textarea className="form-control mb-3 mx-4" name="feedback" placeholder="Add feedback . . ." id="floatingTextarea" style={{height: '120px', width: '1000px', marginLeft: '13px'}} onChange={e => setFeedback(e.target.value)} value={feedback}></textarea>
+                        <textarea className="form-control mb-3 mx-4" name="feedback" placeholder="Add feedback . . ." id="floatingTextarea" style={{ height: '120px', width: '1000px', marginLeft: '13px' }} onChange={e => setFeedback(e.target.value)} value={feedback}></textarea>
                     </div>
                     <div className="d-flex justify-content-end">
-                        <button className="btn btn-danger mb-4 mx-5" type="button" onClick={invalidateSciencePlan}><i className="bi bi-x-circle"></i> Invalidate</button>
+                        <button className="btn btn-danger mb-4 mx-5" type="button" onClick={invalidateSciencePlan} data-bs-toggle="modal" data-bs-target="#exampleModal"><i className="bi bi-x-circle"></i> Invalidate</button>
                     </div>
                 </div>
             </div>

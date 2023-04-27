@@ -585,8 +585,10 @@ public class MyOCSRepository extends OCS {
         System.out.println("Goodbye!");
     }
 
-    // TODO: 23/4/2566 now cannot edit dataProcRequirement
     public boolean editSciencePlan(int planNo, MySciencePlan sp) {
+        System.out.println(sp);
+        System.out.println(sp.getDataProcRequirements());
+        System.out.println(sp.getCollaborator());
         String[] slists = new String[2];
         String spCreator = sp.getCreator();
         String spSubmitter = sp.getSubmitter();

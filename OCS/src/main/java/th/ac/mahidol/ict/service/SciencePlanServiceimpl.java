@@ -134,6 +134,9 @@ public class SciencePlanServiceimpl implements SciencePlanService {
             var3.printStackTrace();
             return false;
         }
+        if(startDate1.after(endDate1)){
+            return false;
+        }
         for (MySciencePlan mySciencePlan:
                 ocs.getAllMySciencePlans()) {
             Date startDate2;

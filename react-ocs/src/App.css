@@ -24,3 +24,11 @@
 label{
   font-weight: 500;
 }
+
+.create{
+  background-image: linear-gradient(0deg, rgba(0, 18, 71, 1) 0%, rgba(46, 61, 104, 1) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+#actiontab{
+  background-image: linear-gradient(0deg, rgba(57, 48, 83, 1) 0%, rgba(86, 78, 108, 0.84) 0%, rgba(67, 58, 92, 0.72) 0%, rgba(255, 255, 255, 0) 100%, rgba(245, 245, 246, 0.05) 100%, rgba(241, 240, 242, 0) 100%, rgba(181, 177, 190, 0.33) 100%, rgba(239, 238, 240, 0.01) 100%);
+}

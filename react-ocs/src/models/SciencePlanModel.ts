@@ -29,5 +29,13 @@ class SciencePlanModel{
         this.status = status;
         this.collaborator = collaborator;
     }
+    setDates(start: Date, end: Date) {
+        this.startDate = start.toISOString();
+        this.endDate = end.toISOString();
+      }
+
+    setObserverFeedBack(feedback: string){
+        this.observerFeedback = feedback;
+    }
 }
 export default SciencePlanModel;

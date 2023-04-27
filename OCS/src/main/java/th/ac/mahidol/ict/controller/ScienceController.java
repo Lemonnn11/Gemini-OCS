@@ -72,17 +72,20 @@ public class ScienceController {
     @CrossOrigin
     @PostMapping("/add")
     public ResponseEntity<HttpStatus> createSciencePlan(@RequestHeader(value = "Authorization") String token, @RequestBody MySciencePlan mySciencePlan) throws Exception{
+        System.out.println(mySciencePlan.getStartDate());
+        System.out.println(mySciencePlan.getEndDate());
         String email = ExtractJWT.JWTPayloadExtract(token, "\"sub\"");
         boolean res = scienceService.createSciencePlan(mySciencePlan, email);
         if(res){
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
     @CrossOrigin
     @PutMapping("/edit")
-    public ResponseEntity<HttpStatus> editSciencePlan( @RequestBody MySciencePlan mySciencePlan){
+    public ResponseEntity<HttpStatus> editSciencePlan(@RequestBody MySciencePlan mySciencePlan){
+        System.out.println(mySciencePlan);
         boolean res = scienceService.editSciencePlanByID(mySciencePlan.getPlanNo(), mySciencePlan);
         if(res){
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -99,8 +102,8 @@ public class ScienceController {
 
     @CrossOrigin
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatus> deleteSciencePlanById( @RequestParam("id") int id){
-        boolean res = scienceService.deleteSciencePlanByID(id);
+    public ResponseEntity<HttpStatus> deleteSciencePlanById( @RequestBody int planNo){
+        boolean res = scienceService.deleteSciencePlanByID(planNo);
         if(res){
             return new ResponseEntity<>(HttpStatus.OK);
         }

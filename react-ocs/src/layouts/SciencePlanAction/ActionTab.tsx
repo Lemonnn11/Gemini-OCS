@@ -5,6 +5,8 @@ import { ValidateSciencePlan } from "../ValidateSciencePlan/ValidateSciencePlan"
 import { TestSciencePlan } from "../TestSciencePlan";
 import { useOktaAuth } from "@okta/okta-react";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
+import { Redirect } from "react-router-dom";
+import { InvalidatedSciencePlanPage } from "../InvalidateSciencePlan.tsx/InvalidatedSciencePlan";
 
 export const ActionTab = () => {
 
@@ -32,7 +34,7 @@ export const ActionTab = () => {
             }
             const responseJson = await response.json();
 
-            setStatus(responseJson.status,);
+            setStatus(responseJson.status);
 
             setLoading(false);
         };
@@ -56,11 +58,19 @@ export const ActionTab = () => {
         )
     }
 
+    if(authState?.accessToken?.claims.userType === "astronomer" && status === "SUBMITTED"){
+        return <Redirect to={'/sciencePlans'}/>
+    }
+
+    if(authState?.accessToken?.claims.userType === "scienceObserver" && (status === "SAVED" || status === "TESTED")){
+        return <Redirect to={'/sciencePlans'}/>
+    }
+
     return (
-        <div>
+        <div id="actiontab">
             <Navbar />
-            <div className="container">
-                <div className="mb-2" style={{ marginTop: '70px', marginLeft: '15px' }}><a style={{ fontWeight: 500, fontSize: '22px' }}>Manage Science Plan</a></div>
+            <div className="container"style={{paddingBottom: '143px'}} >
+                <div className="mb-2" style={{ marginTop: '66px', marginLeft: '15px' }}><a style={{ fontWeight: 500, fontSize: '22px' }}>Manage Science Plan</a></div>
                 <nav>
                     <div className="nav" role="tablist" style={{ marginLeft: '15px' }}>
                         <ul className="nav nav-underline">
@@ -72,6 +82,9 @@ export const ActionTab = () => {
                             </li>
                             <li className="nav-item">
                                 <a className={`nav-link text-dark ${status === "SUBMITTED" ? "active": "disabled" }`} data-bs-toggle="tab" data-bs-target="#validate-tab" aria-current="page">Validate</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className={`nav-link text-dark ${status === "INVALIDATED" ? "active": "disabled" }`} data-bs-toggle="tab" data-bs-target="#invalidate-tab" aria-current="page">Invalidate</a>
                             </li>
                         </ul>
                     </div>
@@ -91,6 +104,11 @@ export const ActionTab = () => {
                         <ValidateSciencePlan />
                     </div>):(<div className="tab-pane fade" id="validate-tab">
                         <ValidateSciencePlan />
+                    </div>)}
+                    {status === "INVALIDATED" ? (<div className="tab-pane fade show active" id="invalidate-tab">
+                        <InvalidatedSciencePlanPage />
+                    </div>):(<div className="tab-pane fade" id="validate-tab">
+                        <InvalidatedSciencePlanPage />
                     </div>)}
                 </div>
 

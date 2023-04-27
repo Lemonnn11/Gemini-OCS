@@ -26,5 +26,10 @@ class SciencePlanModel2{
         this.collaborator = collaborator;
         this.status = status;
     }
+
+    setDates(start: Date, end: Date) {
+        this.startDate = start.toISOString();
+        this.endDate = end.toISOString();
+      }
 }
 export default SciencePlanModel2;

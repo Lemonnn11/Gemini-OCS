@@ -113,7 +113,7 @@ export const SciencePlanInfoPage = () => {
             setFunding(plan.fundingInUSD?.toString());
             setObjective(plan.objectives);
             setStarSystem(plan.starSystem);
-            setCollab(plan.collaborator.fname + " "+ plan.collaborator.lname);
+            setCollab(plan.collaborator.fname + " " + plan.collaborator.lname);
             setLocation(plan.telescopeLocation);
             setFileType(plan.dataProcRequirement.fileType);
             setFileQuality(plan.dataProcRequirement.fileQuality);
@@ -155,38 +155,54 @@ export const SciencePlanInfoPage = () => {
     async function submitSciencePlan(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
         const url = `http://localhost:8080/sciencePlans/submit`;
-            const request = {
-                method: "PUT",
-                headers: {
-                    Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
-                    "Content-Type": "application/json"
-                },
-                body: planNo
-            };
+        const request = {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body: planNo
+        };
 
-            const submitSciencePlan = await fetch(url, request);
-            if (!submitSciencePlan) {
-                setShowWarning(true);
-                setShowSuccess(false);
-                throw new Error('Error found');
-            } else {
-                setShowWarning(false);
-                setShowSuccess(true);
-            }
+        const submitSciencePlan = await fetch(url, request);
+        if (!submitSciencePlan) {
+            setShowWarning(true);
+            setShowSuccess(false);
+            throw new Error('Error found');
+        } else {
+            setShowWarning(false);
+            setShowSuccess(true);
+        }
     }
 
     return (
         <div>
+            <div className="modal fade" id="popup" tabIndex={-1} aria-labelledby="popup" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h2 className="modal-title fs-5" id="popup">Submit a science plan</h2>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            submit successfully
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className="container" style={{ marginTop: '30px' }}>
 
                 <div className="card shadow" style={{ width: 'rem', borderRadius: '1rem' }}>
 
                     <div className="card-header">
                         <div className="card-tile d-flex bd-highlight pt-3">
-                            <div className="card-title mx-2" style={{fontWeight: 500}}>PlanNo</div>
+                            <div className="card-title mx-2" style={{ fontWeight: 500 }}>PlanNo</div>
                             <div className="card-title mb-3 text-muted">#000{planNo}</div>
                             <div className="ms-auto bd-highlight">
-                                <button className="btn btn-dark" style={{marginTop: '-6px', marginRight: '10px'}} onClick={handleClick}><i className="bi bi-pen"></i> Edit</button>
+                                <button className="btn btn-dark" style={{ marginTop: '-6px', marginRight: '10px' }} onClick={handleClick}><i className="bi bi-pen"></i> Edit</button>
                             </div>
                         </div>
                     </div>
@@ -274,7 +290,7 @@ export const SciencePlanInfoPage = () => {
                                 </div>
 
                             </div>
-                            <div className="col mt-3 mb-2" style={{marginRight: '-60px'}}>
+                            <div className="col mt-3 mb-2" style={{ marginRight: '-60px' }}>
                                 <div className="card-title mb-4" style={{ fontWeight: 500 }}>Data Process Requirements</div>
                                 <div className="row mb-4 mt-3">
                                     <div className="col-sm-6">
@@ -400,7 +416,7 @@ export const SciencePlanInfoPage = () => {
 
                     </div>
                     <div className="d-flex justify-content-end">
-                        <button className="btn btn-warning mb-4 mx-5" type="button" onClick={submitSciencePlan}>Submit<i className="bi bi-caret-right-fill"></i></button>
+                        <button className="btn btn-warning mb-4 mx-5" type="button" onClick={submitSciencePlan} data-bs-toggle="modal" data-bs-target="#popup">Submit<i className="bi bi-caret-right-fill"></i></button>
                     </div>
 
 

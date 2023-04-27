@@ -20,11 +20,16 @@
   height: 100;
 }
 
+body {
+  overflow-x: hidden; /* prevent horizontal overflow */
+}
+
 .home{
   background-image: url(./images/telescope.png);
   background-size: cover;
   background-repeat: no-repeat;
   width: 100.1%;
+  background-position: center; 
   background-clip: content-box;
 }
 
